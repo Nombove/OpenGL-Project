@@ -615,7 +615,9 @@ void ramie(double r1, double r2, double h, double d)
 	glEnd();
 }
 
-//funkcje uzyte w ³aziku
+
+//funkcje uzyte w laziku
+
 
 void kolaL(double r, double h)
 {	
@@ -1008,6 +1010,9 @@ void antena(double r, double h)
 		}
 		glEnd();
 }
+
+
+
 // Called to draw scene
 void RenderScene(void)
 	{
