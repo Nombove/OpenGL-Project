@@ -615,6 +615,7 @@ void ramie(double r1, double r2, double h, double d)
 }
 
 
+//funkcje uzyte w �aziku
 
 void kolaL(double r, double h)
 {	
