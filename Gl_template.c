@@ -293,6 +293,7 @@ void kula(void)
 // opis: ³aduje mapê bitow¹ z pliku i zwraca jej adres.
 //       Wype³nia strukturê nag³ówka.
 //	 Nie obs³uguje map 8-bitowych.
+
 unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
 {
 	FILE *filePtr;							// wskaŸnik pozycji pliku
@@ -614,8 +615,7 @@ void ramie(double r1, double r2, double h, double d)
 	glEnd();
 }
 
-
-//funkcje uzyte w ï¿½aziku
+//funkcje uzyte w ³aziku
 
 void kolaL(double r, double h)
 {	
@@ -1007,9 +1007,6 @@ void antena(double r, double h)
 			glVertex3d( OX,  OY, h + OZ);
 		}
 		glEnd();
-
-
-	
 }
 // Called to draw scene
 void RenderScene(void)
