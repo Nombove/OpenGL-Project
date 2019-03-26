@@ -616,7 +616,7 @@ void ramie(double r1, double r2, double h, double d)
 }
 
 
-//funkcje uzyte w laziku
+	//funkcje uzyte w laziku
 
 
 void kolaL(double r, double h)
