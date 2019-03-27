@@ -50,3 +50,17 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+.vs/Grafika Projekt/v15/Browse.VC.db
+*.json
+*.sqlite
+.vs/szescian/v15/.suo
+.vs/szescian/v15/Browse.VC.db
+.vs/szescian/v15/Browse.VC.opendb
+.vs/szescian/v15/ipch/AutoPCH/dfe351c4c76217b/GL_TEMPLATE.ipch
+szescian/x64/Debug/szescian.log
+szescian/x64/Debug/szescian.log
+*.log
+szescian/x64/Debug/szescian.log
+szescian/x64/Debug/szescian.tlog/link.read.1.tlog
+szescian/x64/Debug/szescian.log
+szescian/x64/Debug/szescian.tlog/link.read.1.tlog
