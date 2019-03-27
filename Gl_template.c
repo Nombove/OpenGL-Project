@@ -983,33 +983,35 @@ void nadwozie(float x, float y, float z) {
 }
 
 
-void antena(double r, double h)
+void antena(double r, double h, double OX, double OY, double OZ)
 {
-	double i = 0;
-		double OX = 70 + i, OY =50, OZ = 30;
-		double x, y, alpha, PI = 3.14;
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
 
-		}
-		glEnd();
+	double x, z, alpha, PI = 3.14;
+	glBegin(GL_TRIANGLE_FAN);
+	glColor3d(0.8, 0.0, 0);
+	glVertex3d(0 + OX, 0 + OY, 0 + OZ);
+	for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
+	{
+		x = r * sin(alpha);
+		z = r * cos(alpha);
+		glVertex3d(x + OX, 0 + OY, z + OZ);
 
-		glBegin(GL_TRIANGLE_STRIP);
-		for (alpha = 0.0; alpha <= 2* PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d( OX,  OY, h + OZ);
-		}
-		glEnd();
+	}
+	glEnd();
+
+	glBegin(GL_TRIANGLE_STRIP);
+	for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
+	{
+		x = r * sin(alpha);
+		z = r * cos(alpha);
+		glVertex3d(x + OX, 0 + OY, z + OZ);
+		glVertex3d(OX, OY + h, OZ);
+	}
+	glEnd();
 }
+
+
+
 
 
 
@@ -1045,7 +1047,9 @@ void RenderScene(void)
 	
 	//maska(0.0f, 10.0f, 10.0f,50,20,50);	//polozenie: OY i OZ=10 bo 10 maj¹ ko³a, 3 ost. param to wielkosc maski w XYZ
 	nadwozie(0, 0, 10);
-	antena(10, -50); 
+
+	antena(2, 50, 90, 5, 20);
+	antena(2, 50, 90, 5, 50);
 
 	//Uzyskanie siatki:
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
