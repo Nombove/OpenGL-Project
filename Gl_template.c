@@ -617,6 +617,39 @@ void ramie(double r1, double r2, double h, double d)
 
 
 	//funkcje uzyte w laziku
+void DrawGrid(int HALF_GRID_SIZE)
+{
+	glBegin(GL_LINES);
+	glColor3f(0.75f, 0.75f, 0.75f);
+	for (int i = -HALF_GRID_SIZE; i <= HALF_GRID_SIZE; i += 10)
+	{
+		glVertex3f((float)-HALF_GRID_SIZE, (float)i, 0);
+		glVertex3f((float)HALF_GRID_SIZE, (float)i, 0);
+
+		glVertex3f((float)i, (float)-HALF_GRID_SIZE, 0);
+		glVertex3f((float)i, (float)HALF_GRID_SIZE, 0);
+	}
+	glEnd();
+
+
+	glBegin(GL_LINES);
+	glColor3f(1, 0, 0);
+	glVertex3f(0, 1, 0);
+	glVertex3f((float)HALF_GRID_SIZE, 1, 0);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0, 1, 0);
+	glVertex3f(1, 0, 0);
+	glVertex3f(1, (float)HALF_GRID_SIZE, 0);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0, 0, 1);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, (float)HALF_GRID_SIZE);
+	glEnd();
+}
 
 
 void kolaL(double r, double h)
@@ -1014,7 +1047,6 @@ void antena(double r, double h, double OX, double OY, double OZ)
 
 
 
-
 // Called to draw scene
 void RenderScene(void)
 	{
@@ -1039,7 +1071,7 @@ void RenderScene(void)
 	//szescian();
 	//skrzynka();
 	cegla(30, 40, 30);
-
+	DrawGrid(500);
 	kolaL(10, 10);	//promien,szerokosc kó³
 	kolpaki(5, 5);
 	lacznik(2, 60);
@@ -1050,6 +1082,8 @@ void RenderScene(void)
 
 	antena(2, 50, 90, 5, 20);
 	antena(2, 50, 90, 5, 50);
+
+	
 
 	//Uzyskanie siatki:
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
