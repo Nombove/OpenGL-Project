@@ -16,6 +16,7 @@
     <None Include="..\RESOURCE.APS">
       <Filter>Source files</Filter>
     </None>
+    <None Include="Images\box_stack.mtl" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source files">
