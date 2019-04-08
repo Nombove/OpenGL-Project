@@ -10,6 +10,7 @@
     <ClInclude Include="Features\Grid.h">
       <Filter>Grid</Filter>
     </ClInclude>
+    <ClInclude Include="Features\OBJ_Loader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\RESOURCE.APS">
@@ -58,5 +59,8 @@
     <ClCompile Include="Features\Grid.cpp">
       <Filter>Grid</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="e1Out.txt" />
   </ItemGroup>
 </Project>

@@ -158,6 +158,10 @@
     <ClInclude Include="..\RESOURCE.H" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="Features\Grid.h" />
+    <ClInclude Include="Features\OBJ_Loader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="e1Out.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
