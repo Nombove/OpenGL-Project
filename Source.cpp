@@ -934,7 +934,7 @@ void ladowanie(void)
 	objl::Loader Loader;
 
 	// Load .obj File
-	bool loadout = Loader.LoadFile("box_stack.obj");
+	bool loadout = Loader.LoadFile("Images/box_stack.obj");
 
 	// Check to see if it loaded
 
