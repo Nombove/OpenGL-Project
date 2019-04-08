@@ -1,33 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="definitions.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
     <ClInclude Include="..\RESOURCE.H">
-      <Filter>Header Files</Filter>
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Grid.h">
+      <Filter>Grid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\RESOURCE.APS">
-      <Filter>Resource Files</Filter>
+      <Filter>Source files</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Gl_template.c">
-      <Filter>Source Files</Filter>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{07a6bc86-e3d6-45f4-83ac-e0327770de57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rover">
+      <UniqueIdentifier>{f9b0fb12-1401-4258-86bb-8d99a139c4bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts">
+      <UniqueIdentifier>{bab85a24-8914-4f57-a55d-3efff6a5cb98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Grid">
+      <UniqueIdentifier>{b2c0cc0a-7582-4612-b6ed-45d55da76604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\Wheel">
+      <UniqueIdentifier>{eff74c99-c381-4263-8d66-f99be0ba83fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\Platform">
+      <UniqueIdentifier>{24154a89-26a3-4e16-b213-d82f88c3e4be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\Chassis">
+      <UniqueIdentifier>{f63e9c3c-e8fb-47ac-ba22-617354cc4fd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\Arm">
+      <UniqueIdentifier>{aef0b276-5f26-49f6-a48b-bbfcce2ed74d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\Chassis\Frame">
+      <UniqueIdentifier>{9a7066b2-9887-4e67-9968-33a1369ca864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\Chassis\Axle">
+      <UniqueIdentifier>{c1fd59a0-1cc6-4ab5-aee2-287e71a949c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cuboid">
+      <UniqueIdentifier>{622d58ad-0ac3-4475-b401-c24a5b93cbc3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Grid.cpp">
+      <Filter>Grid</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
