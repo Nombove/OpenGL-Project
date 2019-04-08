@@ -1,33 +1,33 @@
 ﻿  Gl_template.c
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(347): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(364): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(365): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(366): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(350): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(367): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(372): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(373): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(374): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(368): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(369): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(370): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
 c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(375): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(382): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(383): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(384): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(376): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(377): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(378): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
 c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(385): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(390): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(391): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(392): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(386): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(387): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(388): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
 c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(393): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(400): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(401): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(402): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(394): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(395): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(396): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
 c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(403): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(408): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(409): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(410): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(404): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(405): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(406): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
 c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(411): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1234): warning C4244: "return": konwersja z "WPARAM" do "int", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1403): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1404): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1425): warning C4028: formalny parametr 3 różni się od deklaracji
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1425): warning C4028: formalny parametr 4 różni się od deklaracji
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1425): warning C4133: "funkcja": niezgodne typy - od "BOOL (__cdecl *)(HWND,UINT,UINT,LONG)" do "DLGPROC"
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(412): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(413): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(414): warning C4244: "funkcja": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1277): warning C4244: "return": konwersja z "WPARAM" do "int", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1446): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1447): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1468): warning C4028: formalny parametr 3 różni się od deklaracji
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1468): warning C4028: formalny parametr 4 różni się od deklaracji
+c:\users\toshiba\desktop\studia\projekty\grafika projekt\gl_template.c(1468): warning C4133: "funkcja": niezgodne typy - od "BOOL (__cdecl *)(HWND,UINT,UINT,LONG)" do "DLGPROC"
   szescian.vcxproj -> C:\Users\Toshiba\Desktop\Studia\Projekty\Grafika Projekt\x64\Debug\szescian.exe

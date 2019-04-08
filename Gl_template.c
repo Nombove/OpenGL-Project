@@ -32,6 +32,8 @@
 #include <math.h>				// Define for sqrt
 #include <stdio.h>
 #include "resource.h"           // About box resource identifiers.
+//#include "OBJ_Loader.h"			//Dodawanie modeli 3D z blendera(.obj)
+
 
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
 #define BITMAP_ID 0x4D42		// identyfikator formatu BMP
