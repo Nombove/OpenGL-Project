@@ -832,7 +832,7 @@ void RenderScene(void)
 
 
 	cegla(30, 40, 30);
-	DrawGrid(500);
+	DrawGrid(500);			//mozna wywalic
 	kolaL(10, 10);	//promien,szerokosc kó³
 	kolpaki(5, 5);
 	lacznik(2, 60);
