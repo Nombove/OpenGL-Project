@@ -129,7 +129,7 @@ void calcNormal(float v[3][3], float out[3])
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
 {
-	GLfloat nRange = 150.0f;
+	GLfloat nRange = 1000.0f;
 	GLfloat fAspect;
 	// Prevent a divide by zero
 	if (h == 0)
@@ -767,10 +767,14 @@ void ladowanie(void)
 	objl::Loader floor;
 	glPushMatrix();
 
-	glRotatef(90, 1, 0, 0);
-	glScalef(2, 2, 2);
+	glRotatef(0, 0, 0, 0);
+	glScalef(200, 200, 200);
 
-	if (floor.LoadFile("objects/untitled.obj"))
+	float x_position = 0;
+	float y_position = -0.05;
+	float z_position = 0;
+
+	if (floor.LoadFile("objects/terrain3.obj"))
 	{
 		for (int i = 0; i < floor.LoadedMeshes.size(); i++)
 		{
@@ -779,25 +783,24 @@ void ladowanie(void)
 			for (int j = 0; j < curMesh.Indices.size(); j += 3)
 			{
 				glBegin(GL_TRIANGLES);
-				//double random = 0.5f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.55f - 0.5f)));
 				glColor3f(1, 0, 0);
-				if (i == 0) glColor3f(0, 0, 1);
+				if (i == 0) glColor3f(1, 0, 0);
 				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j]].Position.X,
-					curMesh.Vertices[curMesh.Indices[j]].Position.Y,
-					curMesh.Vertices[curMesh.Indices[j]].Position.Z
+					curMesh.Vertices[curMesh.Indices[j]].Position.X + x_position,
+					curMesh.Vertices[curMesh.Indices[j]].Position.Y + y_position,
+					curMesh.Vertices[curMesh.Indices[j]].Position.Z + z_position
 				);
 
 				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.X,
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Y,
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Z
+					curMesh.Vertices[curMesh.Indices[j + 1]].Position.X + x_position,
+					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Y + y_position,
+					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Z + z_position
 				);
 
 				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.X,
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Y,
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Z
+					curMesh.Vertices[curMesh.Indices[j + 2]].Position.X + x_position,
+					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Y + y_position,
+					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Z + z_position
 				);
 				glEnd();
 			}
@@ -825,14 +828,15 @@ void RenderScene(void)
 
 	//Sposób na odróŸnienie "przedniej" i "tylniej" œciany wielok¹ta:
 	//glPolygonMode(GL_FRONT, GL_LINE);
-
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	
 	
 	glRotatef(zoom, 0, 0, 0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
-	cegla(30, 40, 30);
-	DrawGrid(500);			//mozna wywalic
+
+	//cegla(30, 40, 30);
+	//DrawGrid(500);			//mozna wywalic
 	kolaL(10, 10);	//promien,szerokosc kó³
 	kolpaki(5, 5);
 	lacznik(2, 60);
