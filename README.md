@@ -1,2 +1,2 @@
-# Włazik
-Mars rover written in C++ using OpenGL for the Computer graphics course at the uni.
+# Martian Rover written using C++ with OpenGL
+
