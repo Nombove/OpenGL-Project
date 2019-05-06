@@ -1,10 +1,10 @@
-// Gl_template.c
-//Wy≥öczanie b≥ÍdÛw przed "fopen"
+Ôªø// Gl_template.c
+//Wy≈Ç≈°czanie b≈Çƒôd√≥w przed "fopen"
 #define  _CRT_SECURE_NO_WARNINGS
 
 
 
-// £adowanie bibliotek:
+// ≈Åadowanie bibliotek:
 
 #ifdef _MSC_VER                         // Check if MS Visual C compiler
 #  pragma comment(lib, "opengl32.lib")  // Compiler-specific directive to avoid manually configuration
@@ -28,7 +28,7 @@
 #endif
 #include <windows.h>            // Window defines
 #include <gl\gl.h>              // OpenGL
-#include <gl\glu.h>             // GLU library
+#include <gl\GLU.h>             // GLU library
 #include <math.h>				// Define for sqrt
 #include <stdio.h>
 #include "resource.h"           // About box resource identifiers.
@@ -49,13 +49,20 @@ static HINSTANCE hInstance;
 static GLfloat xRot = 0.0f;
 static GLfloat yRot = 0.0f;
 static GLfloat zRot = 0.0f;
+static GLfloat rotSpeed = 20.0f;
 
-static GLfloat zoom;
+static GLfloat zoom = 0.0f;
+static GLfloat fov = 1000.0f;
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
+static GLfloat cameraX = 0.0f;
+static GLfloat cameraY = 0.0f;
+static GLfloat cameraZ = 200.0f;
+static GLfloat cameraSpeed = 30.0f;
+
 // Opis tekstury
-BITMAPINFOHEADER	bitmapInfoHeader;	// nag≥Ûwek obrazu
+BITMAPINFOHEADER	bitmapInfoHeader;	// nag≈Ç√≥wek obrazu
 unsigned char*		bitmapData;			// dane tekstury
 unsigned int		texture[2];			// obiekt tekstury
 
@@ -211,24 +218,21 @@ void SetupRC()
 
 
 
-// LoadBitmapFile
-// opis: ≥aduje mapÍ bitowπ z pliku i zwraca jej adres.
-//       Wype≥nia strukturÍ nag≥Ûwka.
-//	 Nie obs≥uguje map 8-bitowych.
+
 unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
 {
-	FILE *filePtr;							// wskaünik pozycji pliku
-	BITMAPFILEHEADER	bitmapFileHeader;		// nag≥Ûwek pliku
+	FILE *filePtr;							// wska≈∫nik pozycji pliku
+	BITMAPFILEHEADER	bitmapFileHeader;		// nag≈Ç√≥wek pliku
 	unsigned char		*bitmapImage;			// dane obrazu
 	int					imageIdx = 0;		// licznik pikseli
-	unsigned char		tempRGB;				// zmienna zamiany sk≥adowych
+	unsigned char		tempRGB;				// zmienna zamiany sk≈Çadowych
 
 	// otwiera plik w trybie "read binary"
 	filePtr = fopen(filename, "rb");
 	if (filePtr == NULL)
 		return NULL;
 
-	// wczytuje nag≥Ûwek pliku
+	// wczytuje nag≈Ç√≥wek pliku
 	fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
 
 	// sprawdza, czy jest to plik formatu BMP
@@ -238,16 +242,16 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 		return NULL;
 	}
 
-	// wczytuje nag≥Ûwek obrazu
+	// wczytuje nag≈Ç√≥wek obrazu
 	fread(bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
 
-	// ustawia wskaünik pozycji pliku na poczπtku danych obrazu
+	// ustawia wska≈∫nik pozycji pliku na poczƒÖtku danych obrazu
 	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
 
-	// przydziela pamiÍÊ buforowi obrazu
+	// przydziela pamiƒôƒá buforowi obrazu
 	bitmapImage = (unsigned char*)malloc(bitmapInfoHeader->biSizeImage);
 
-	// sprawdza, czy uda≥o siÍ przydzieliÊ pamiÍÊ
+	// sprawdza, czy uda≈Ço siƒô przydzieliƒá pamiƒôƒá
 	if (!bitmapImage)
 	{
 		free(bitmapImage);
@@ -258,14 +262,14 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 	// wczytuje dane obrazu
 	fread(bitmapImage, 1, bitmapInfoHeader->biSizeImage, filePtr);
 
-	// sprawdza, czy dane zosta≥y wczytane
+	// sprawdza, czy dane zosta≈Çy wczytane
 	if (bitmapImage == NULL)
 	{
 		fclose(filePtr);
 		return NULL;
 	}
 
-	// zamienia miejscami sk≥adowe R i B 
+	// zamienia miejscami sk≈Çadowe R i B 
 	for (imageIdx = 0; imageIdx < bitmapInfoHeader->biSizeImage; imageIdx += 3)
 	{
 		tempRGB = bitmapImage[imageIdx];
@@ -273,7 +277,7 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 		bitmapImage[imageIdx + 2] = tempRGB;
 	}
 
-	// zamyka plik i zwraca wskaünik bufora zawierajπcego wczytany obraz
+	// zamyka plik i zwraca wska≈∫nik bufora zawierajƒÖcego wczytany obraz
 	fclose(filePtr);
 	return bitmapImage;
 }
@@ -451,7 +455,7 @@ void kolaL(double r, double h)
 void kolpaki(double r, double h)
 {
 	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kolpakÛw z jednej strony
+	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kolpak√≥w z jednej strony
 	{
 		double OX = 0 + i, OY = 0, OZ = -2;	//-2 zeby wystawaly z kol
 		double x, y, alpha, PI = 3.14;
@@ -625,14 +629,14 @@ void scian(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(p_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//gÛra
+	glBegin(GL_TRIANGLE_STRIP);		//g√≥ra
 	glVertex3fv(g_x);
 	glVertex3fv(g_xz);
 	glVertex3fv(g_xx);
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//przÛd
+	glBegin(GL_TRIANGLE_STRIP);		//prz√≥d
 	glVertex3fv(p_x);
 	glVertex3fv(p_xz);
 	glVertex3fv(g_x);
@@ -652,7 +656,7 @@ void scian(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//ty≥
+	glBegin(GL_TRIANGLE_STRIP);		//ty≈Ç
 	glVertex3fv(p_xx);
 	glVertex3fv(p_xxz);
 	glVertex3fv(g_xx);
@@ -681,14 +685,14 @@ void maska(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(p_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//gÛra
+	glBegin(GL_TRIANGLE_STRIP);		//g√≥ra
 	glVertex3fv(g_x);
 	glVertex3fv(g_xz);
 	glVertex3fv(g_xx);
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//przÛd
+	glBegin(GL_TRIANGLE_STRIP);		//prz√≥d
 	glVertex3fv(p_x);
 	glVertex3fv(p_xz);
 	glVertex3fv(g_x);
@@ -708,7 +712,7 @@ void maska(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//ty≥
+	glBegin(GL_TRIANGLE_STRIP);		//ty≈Ç
 	glVertex3fv(p_xx);
 	glVertex3fv(p_xxz);
 	glVertex3fv(g_xx);
@@ -807,6 +811,8 @@ void ladowanie(void)
 		}
 	}
 }
+//CAMERA
+
 
 // Called to draw scene
 void RenderScene(void)
@@ -826,10 +832,10 @@ void RenderScene(void)
 	// MIEJSCE NA KOD OPENGL DO TWORZENIA WLASNYCH SCEN:		   //
 	/////////////////////////////////////////////////////////////////
 
-	//SposÛb na odrÛünienie "przedniej" i "tylniej" úciany wielokπta:
-	//glPolygonMode(GL_FRONT, GL_LINE);
+	//Spos√≥b na odr√≥≈∫nienie "przedniej" i "tylniej" ≈õciany wielokƒÖta:
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
+
+	gluLookAt(cameraX, cameraY, cameraZ, 0 + cameraX, 0 + cameraY, 0.0, 0.0, 1.0, 0.0);
 	
 	glRotatef(zoom, 0, 0, 0);
 
@@ -837,12 +843,12 @@ void RenderScene(void)
 
 	//cegla(30, 40, 30);
 	//DrawGrid(500);			//mozna wywalic
-	kolaL(10, 10);	//promien,szerokosc kÛ≥
+	kolaL(10, 10);	//promien,szerokosc k√≥≈Ç
 	kolpaki(5, 5);
 	lacznik(2, 60);
 	//blotnikPrzod(10.0, 10.0, 50.0, 0.0);	//wielkosc 1,wielkosc 2.,szerokosc,jak wysoko ma byc polozone(OY)
 
-	//maska(0.0f, 10.0f, 10.0f,50,20,50);	//polozenie: OY i OZ=10 bo 10 majπ ko≥a, 3 ost. param to wielkosc maski w XYZ
+	//maska(0.0f, 10.0f, 10.0f,50,20,50);	//polozenie: OY i OZ=10 bo 10 majƒÖ ko≈Ça, 3 ost. param to wielkosc maski w XYZ
 	nadwozie(0, 0, 10);
 
 	antena(2, 50, 90, 5, 20);
@@ -1067,7 +1073,7 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		SetupRC();
 		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
-		// ≥aduje pierwszy obraz tekstury:
+		// ¬≥aduje pierwszy obraz tekstury:
 		//bitmapData = LoadBitmapFile("Bitmapy\\checker.bmp", &bitmapInfoHeader);
 
 		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
@@ -1085,7 +1091,7 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		if (bitmapData)
 			free(bitmapData);
 
-		// ≥aduje drugi obraz tekstury:
+		// ¬≥aduje drugi obraz tekstury:
 		//	bitmapData = LoadBitmapFile("Bitmapy\\crate.bmp", &bitmapInfoHeader);
 		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
@@ -1102,7 +1108,7 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		if (bitmapData)
 			free(bitmapData);
 
-		// ustalenie sposobu mieszania tekstury z t≥em
+		// ustalenie sposobu mieszania tekstury z t¬≥em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		break;
 
@@ -1191,28 +1197,47 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 	case WM_KEYDOWN:
 	{
 		if (wParam == VK_UP)
-			xRot -= 5.0f;
+			xRot -= rotSpeed;
 
 		if (wParam == VK_DOWN)
-			xRot += 5.0f;
+			xRot += rotSpeed;
 
 		if (wParam == VK_LEFT)
-			yRot -= 5.0f;
+			yRot -= rotSpeed;
 
 		if (wParam == VK_RIGHT)
-			yRot += 5.0f;
+			yRot += rotSpeed;
 
 		if (wParam == VK_PRIOR)
-			zRot -= 5.0f;
-			
+			zRot -= rotSpeed;
+
 		if (wParam == VK_NEXT)
-			zRot += 5.0f;
-			
+			zRot += rotSpeed;
+
+		if (wParam == 'W')
+			cameraY += cameraSpeed;
+
+		if (wParam == 'S')
+			cameraY -= cameraSpeed;
+
+		if (wParam == 'A')
+			cameraX -= cameraSpeed;
+
+		if (wParam == 'D')
+			cameraX += cameraSpeed;
+
+		if (wParam == 'Q')
+			cameraZ -= cameraSpeed;
+
+		if (wParam == 'E')
+			cameraZ += cameraSpeed;
+
 		if (wParam == VK_SUBTRACT)
-			zoom -= 3;
-			
+			zoom += rotSpeed;
+
 		if (wParam == VK_ADD)
-			zoom += 3;
+			zoom -= rotSpeed;
+
 
 		xRot = (const int)xRot % 360;
 		yRot = (const int)yRot % 360;
@@ -1251,7 +1276,6 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 
 	return (0L);
 }
-
 
 
 
