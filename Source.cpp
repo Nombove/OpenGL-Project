@@ -56,10 +56,10 @@ static GLfloat fov = 1000.0f;
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
-static GLfloat cameraX = 0.0f;
-static GLfloat cameraY = 0.0f;
+static GLfloat cameraX = 50.0f;
+static GLfloat cameraY = 50.0f;
 static GLfloat cameraZ = 200.0f;
-static GLfloat cameraSpeed = 30.0f;
+static GLfloat cameraSpeed = 50.0f;
 
 // Opis tekstury
 BITMAPINFOHEADER	bitmapInfoHeader;	// nagłówek obrazu
