@@ -1,38 +1,5 @@
-﻿  Source.cpp
-c:\users\krzysztof\documents\github\grafika-projekt\include\obj_loader.h(653): warning C4018: '<': signed/unsigned mismatch
-c:\users\krzysztof\documents\github\grafika-projekt\include\obj_loader.h(690): warning C4018: '<': signed/unsigned mismatch
-c:\users\krzysztof\documents\github\grafika-projekt\include\obj_loader.h(696): warning C4018: '<': signed/unsigned mismatch
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(186): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(187): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(188): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(189): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(194): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(195): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(196): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(197): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(204): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(205): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(206): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(207): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(212): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(213): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(214): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(215): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(222): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(223): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(224): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(225): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(230): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(231): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(232): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(233): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(667): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(673): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(679): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(827): warning C4018: '<': signed/unsigned mismatch
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(862): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(888): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\krzysztof\documents\github\grafika-projekt\source.cpp(892): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+﻿  jeep.cpp
+c:\users\krzysztof\documents\github\grafika-projekt\jeep.cpp(32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Generating code
   2 of 1043 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation

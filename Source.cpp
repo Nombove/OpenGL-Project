@@ -54,6 +54,9 @@ GLfloat fwdMove = 0.1f;
 double posX = 0, posY = 0, posZ = 0;
 jeep lazik(0, 0, 0);
 
+double s_pred = 15;
+double pred = 0;
+
 double PI = M_PI;
 double center[3]{50, 0, 25};
 
@@ -845,15 +848,16 @@ void RenderScene(void)
 
 	glPushMatrix();
 		
-		//posX += fwdMove * sin(axMove * GL_PI / 180);
-		//posZ += fwdMove * cos(axMove*GL_PI / 180);
+		posX += pred * sin(axMove * GL_PI / 180);
+		posZ += pred * cos(axMove*GL_PI / 180);
 
 		glRotatef(xRot, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRot, 0.0f, 1.0f, 0.0f);
 		glRotatef(zRot, 0.0f, 0.0f, 1.0f);
 		glRotatef(zoom, 0, 0, 0);
 		//gluLookAt(cameraX, cameraY, cameraZ, 0 + cameraX, 0 + cameraY, 0.0, 0.0, .0, 0.0);
-		gluLookAt(0, 400, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+		gluLookAt(posX, posY + 150, posZ - 200, posX, posY, posZ, 0.0, 1.0, 0.0);
+	
 
 		glPushMatrix();
 			glRotatef(0, 1, 0, 0);
@@ -880,19 +884,20 @@ void RenderScene(void)
 
 
 
-		//glScalef(0.5,0.5, 0.5);
-		axxxes();
+		//axxxes();
 
 		glPushMatrix();
 			
 			glTranslatef(posX , posY, posZ);
-				//glTranslatef(50, 0, 25);
+			pred = 0;
 				glRotatef(axMove, 0, 1, 0);
-				//glTranslatef(-50, 0, -25);
-			glTranslatef(-posX, -posY, -posZ);
 
-			jeep lazik(0 + fwdMove,0, 0);
+			//glTranslatef(-posX, -posY, -posZ);
+			//glPushMatrix();
+			glRotatef(90, 0, 1, 0);
+			jeep lazik(0, 0, 0);
 			lazik.draw();
+			//glPopMatrix();
 		
 		glPopMatrix();
 
@@ -1272,16 +1277,16 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 			cameraZ += cameraSpeed;
 
 		if (wParam == VK_RIGHT)
-			axMove += 10;
-
-		if (wParam == VK_LEFT)
 			axMove -= 10;
 
+		if (wParam == VK_LEFT)
+			axMove += 10;
+
 		if (wParam == VK_DOWN)
-			fwdMove += 10;
+			pred -= s_pred;
 
 		if (wParam == VK_UP)
-			fwdMove -= 10;
+			pred += s_pred;
 
 		
 		

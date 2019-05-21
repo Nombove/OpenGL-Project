@@ -8,11 +8,6 @@ jeep::jeep(double x, double y, double z)
 	size[0] = x;
 	size[1] = y;
 	size[2] = z;
-
-	/*center[0] = sizeX / 2 + x;
-	center[1] = 0;
-	center[2] = sizeZ / 2 + z;*/
-
 	
 }
 
@@ -28,7 +23,7 @@ double * jeep::getCenter()
 
 void jeep::draw()
 {	
-	double x = size[0]-50, y = size[1], z = size[2]-25;
+	double x = size[0]-45, y = size[1], z = size[2]-32;
 
 	kola(10, 10, x, y, z);	
 	kolpaki(5, 5, x, y, z);
@@ -36,8 +31,8 @@ void jeep::draw()
 
 	nadwozie(x, y, z);
 
-	//antena(2, 50, 90, 5, 20);
-	//antena(2, 50, 90, 5, 50);
+	antena(2, 50, x + 90, y + 5, z + 20);
+	antena(2, 50, x + 90, y + 5, z + 50);
 }
 
 void jeep::kola(double r, double h, double ox, double oy, double oz)
@@ -396,12 +391,18 @@ void jeep::nadwozie(float x, float y, float z) {
 	float pakaX = nadwozieX - maskaX, pakaY = 8, pakaZ = 2;
 	float oddalenie_scian = 3;
 
+	glColor3d(0.2, 0.8, 0.8);
 
 	maska(x, y + nadwozieY, z, maskaX, maskaY, maskaZ);
-	scian(x, y, z, nadwozieX, nadwozieY, nadwozieZ);
-	scian(x + maskaX, y + nadwozieY, z + oddalenie_scian, pakaX, pakaY, pakaZ);
-	scian(x + maskaX, y + nadwozieY, z + nadwozieZ - oddalenie_scian - pakaZ, pakaX, pakaY, pakaZ);
+	
+	glColor3d(1, 0.5, 0.2);
 
+	scian(x, y, z, nadwozieX, nadwozieY, nadwozieZ);
+	glColor3d(1, 0.5, 0);
+	scian(x + maskaX, y + nadwozieY, z + oddalenie_scian, pakaX, pakaY, pakaZ);
+	
+	scian(x + maskaX, y + nadwozieY, z + nadwozieZ - oddalenie_scian - pakaZ, pakaX, pakaY, pakaZ);
+	
 	scian(x + nadwozieX - pakaZ, y + nadwozieY, z + oddalenie_scian + pakaZ,
 		pakaZ, pakaY, nadwozieZ - 2 * (oddalenie_scian + pakaZ));
 }
