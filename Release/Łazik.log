@@ -1,42 +1,68 @@
 ﻿  Source.cpp
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(653): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(690): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(696): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(950): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(273): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(290): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(291): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(292): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(293): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(298): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(299): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(300): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(301): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(308): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(309): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(310): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(311): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(316): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(317): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(318): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(319): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(326): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(327): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(328): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(329): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(334): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(335): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(336): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(337): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(778): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(783): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(787): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(1242): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(1243): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(1244): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\include\obj_loader.h(653): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\toshiba\desktop\martianrover\include\obj_loader.h(690): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\toshiba\desktop\martianrover\include\obj_loader.h(696): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\toshiba\desktop\martianrover\source.cpp(173): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(174): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(175): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(176): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(181): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(182): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(183): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(184): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(191): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(192): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(193): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(194): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(199): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(200): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(201): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(202): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(209): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(210): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(211): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(212): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(217): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(218): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(219): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(220): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\source.cpp(793): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+  Figura.cpp
+  Lazik.cpp
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(185): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(184): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(196): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(195): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(209): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(208): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(220): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(219): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(295): warning C4305: "argument": obcięcie z "double" do "GLfloat"
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(316): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\lazik.cpp(334): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+  Szescian.cpp
+  Terrain.cpp
+c:\users\toshiba\desktop\martianrover\include\obj_loader.h(653): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\toshiba\desktop\martianrover\include\obj_loader.h(690): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\toshiba\desktop\martianrover\include\obj_loader.h(696): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\toshiba\desktop\martianrover\src\terrain.cpp(26): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+c:\users\toshiba\desktop\martianrover\src\terrain.cpp(31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\toshiba\desktop\martianrover\src\terrain.cpp(35): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+  TriangularPrism.cpp
+  Walec.cpp
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(31): warning C4305: "inicjowanie": obcięcie z "double" do "GLfloat"
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(46): warning C4244: "+=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(48): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(49): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(55): warning C4244: "+=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(57): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(58): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(62): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(63): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(72): warning C4244: "-=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(74): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
+c:\users\toshiba\desktop\martianrover\src\walec.cpp(75): warning C4244: "=": konwersja z "double" do "GLfloat", możliwa utrata danych
   Trwa generowanie kodu
-  1 of 880 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  All 1038 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Zakończono generowanie kodu
-  Łazik.vcxproj -> C:\Users\Toshiba\Desktop\Studia\Projekty\Grafika Projekt\Release\rover.exe
+  Łazik.vcxproj -> C:\Users\Toshiba\Desktop\martianRover\Release\Łazik.exe
