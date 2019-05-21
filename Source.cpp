@@ -12,6 +12,7 @@
 //#  pragma comment(lib, "lib/glew32.lib") 
 #endif
 
+#define _USE_MATH_DEFINES
 
 
 
@@ -32,9 +33,11 @@
 #include <windows.h>            // Window defines
 #include <gl\gl.h>              // OpenGL
 #include <gl\glu.h>             // GLU library
-#include <math.h>				// Define for sqrt
+//#include <math.h>				// Define for sqrt
+#include <cmath>
 #include <stdio.h>
 #include "resource.h"           // About box resource identifiers.
+#include "jeep.h"
 //#include "include/Lazik.h"
 #include "include/Terrain.h"
 
@@ -44,6 +47,16 @@
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
 #define BITMAP_ID 0x4D42		// identyfikator formatu BMP
 #define GL_PI 3.14
+
+
+GLfloat axMove = 0.f;
+GLfloat fwdMove = 0.1f;
+double posX = 0, posY = 0, posZ = 0;
+jeep lazik(0, 0, 0);
+
+double PI = M_PI;
+double center[3]{50, 0, 25};
+
 
 // Color Palette handle
 HPALETTE hPalette = NULL;
@@ -63,7 +76,7 @@ static GLfloat fov = 1000.0f;
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
-static GLfloat cameraX = 50.0f;
+static GLfloat cameraX = 500.0f;
 static GLfloat cameraY = 50.0f;
 static GLfloat cameraZ = 200.0f;
 static GLfloat cameraSpeed = 20.0f;
@@ -648,6 +661,27 @@ void antena(double r, double h, double OX, double OY, double OZ)
 	glEnd();
 }
 
+void axxxes() {
+
+	glBegin(GL_LINES);
+	glColor3f(0.2, 0.8, 0.1);
+	glVertex3f(0.0f + axMove, 0.0f, 0.0f);
+	glVertex3f(0.0f + axMove, 1000.0f, 0.0f);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.8, 0.2, 0.1);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(1000.0f, 0.0f, 0.0f);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.1, 0.2, 0.8);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1000.0f);
+	glEnd();
+}
+
 
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
@@ -804,73 +838,67 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 // Called to draw scene
 void RenderScene(void)
 {
-	//float normal[3];	// Storeage for calculated surface normal
-	// Clear the window with current clearing color
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Sposób na odróŸnienie "przedniej" i "tylniej" œciany wielok¹ta:
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glPushMatrix();
+		
+		//posX += fwdMove * sin(axMove * GL_PI / 180);
+		//posZ += fwdMove * cos(axMove*GL_PI / 180);
+
+		glRotatef(xRot, 1.0f, 0.0f, 0.0f);
+		glRotatef(yRot, 0.0f, 1.0f, 0.0f);
+		glRotatef(zRot, 0.0f, 0.0f, 1.0f);
+		glRotatef(zoom, 0, 0, 0);
+		//gluLookAt(cameraX, cameraY, cameraZ, 0 + cameraX, 0 + cameraY, 0.0, 0.0, .0, 0.0);
+		gluLookAt(0, 400, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+
+		glPushMatrix();
+			glRotatef(0, 1, 0, 0);
+			glScalef(5, 5, 5);
 	
-	// Save the matrix state and do the rotations
-	glPushMatrix();
+			Terrain powierzchnia("objects/mars.obj",0,-0.1,0);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, tekstury[0]);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			powierzchnia.draw();
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPopMatrix();
 
-	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-	glRotatef(yRot, 0.0f, 1.0f, 0.0f);
-	glRotatef(zRot, 0.0f, 0.0f, 1.0f);
-	glRotatef(zoom, 0, 0, 0);
-
-	gluLookAt(cameraX, cameraY, cameraZ, 0 + cameraX, 0 + cameraY, 0.0, 0.0, 1.0, 0.0);
-	
-	glPushMatrix();
-
-	glRotatef(90, 1, 0, 0);
-	glScalef(2, 2, 2);
-	Terrain powierzchnia("objects/mars.obj",0,0,0);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, tekstury[0]);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	powierzchnia.draw();
-	glEnd();
-	glDisable(GL_TEXTURE_2D);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	glPopMatrix();
-
-	glPushMatrix();
-
-
-	Terrain objekty("objects/rock/rock.obj", 50, -100, 4);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, tekstury[1]);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	objekty.draw();
-
-
-	glPopMatrix();
+		glPushMatrix();
+			Terrain objekty("objects/rock/rock.obj", 50, -100, 4);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, tekstury[1]);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			objekty.draw();
+		glPopMatrix();
 
 
 
 
-	//glScalef(0.5,0.5, 0.5);
+		//glScalef(0.5,0.5, 0.5);
+		axxxes();
 
+		glPushMatrix();
+			
+			glTranslatef(posX , posY, posZ);
+				//glTranslatef(50, 0, 25);
+				glRotatef(axMove, 0, 1, 0);
+				//glTranslatef(-50, 0, -25);
+			glTranslatef(-posX, -posY, -posZ);
 
-	//cegla(30, 40, 30);
-//DrawGrid(500);			//mozna wywalic
-	kolaL(10, 10);	//promien,szerokosc kó³
-	kolpaki(5, 5);
-	lacznik(2, 60);
-	//blotnikPrzod(10.0, 10.0, 50.0, 0.0);	//wielkosc 1,wielkosc 2.,szerokosc,jak wysoko ma byc polozone(OY)
-
-	//maska(0.0f, 10.0f, 10.0f,50,20,50);	//polozenie: OY i OZ=10 bo 10 maj¹ ko³a, 3 ost. param to wielkosc maski w XYZ
-	nadwozie(0, 0, 10);
-
-	antena(2, 50, 90, 5, 20);
-	antena(2, 50, 90, 5, 50);
+			jeep lazik(0 + fwdMove,0, 0);
+			lazik.draw();
+		
+		glPopMatrix();
 
 
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
-
-	// Flush drawing commands
 	glFlush();
 }
 
@@ -1214,10 +1242,10 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 
 
 		if (wParam == 'Q')
-			zRot -= rotSpeed;
+			yRot -= rotSpeed;
 
 		if (wParam == 'E')
-			zRot += rotSpeed;
+			yRot += rotSpeed;
 
 		if (wParam == VK_SUBTRACT)
 			zoom += 10.0f;
@@ -1243,6 +1271,20 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		if (wParam == VK_SHIFT)
 			cameraZ += cameraSpeed;
 
+		if (wParam == VK_RIGHT)
+			axMove += 10;
+
+		if (wParam == VK_LEFT)
+			axMove -= 10;
+
+		if (wParam == VK_DOWN)
+			fwdMove += 10;
+
+		if (wParam == VK_UP)
+			fwdMove -= 10;
+
+		
+		
 
 
 		InvalidateRect(hWnd, NULL, FALSE);

@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{52B5F2F9-2F5D-47C0-8550-2985D6D3A139}</ProjectGuid>
     <RootNamespace>Łazik</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="jeep.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\Figura.cpp" />
     <ClCompile Include="src\Lazik.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="include\Terrain.h" />
     <ClInclude Include="include\TriangularPrism.h" />
     <ClInclude Include="include\Walec.h" />
+    <ClInclude Include="jeep.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>

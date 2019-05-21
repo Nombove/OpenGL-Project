@@ -48,6 +48,9 @@
     <ClCompile Include="src\Terrain.cpp">
       <Filter>Source Files\Lazik</Filter>
     </ClCompile>
+    <ClCompile Include="jeep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files\Lazik</Filter>
     </ClInclude>
     <ClInclude Include="include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="jeep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
