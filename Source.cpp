@@ -1,14 +1,15 @@
-Ôªø// Gl_template.c
-//Wy≈Ç≈°czanie b≈Çƒôd√≥w przed "fopen"
+// Gl_template.c
+//Wy≥öczanie b≥ÍdÛw przed "fopen"
 #define  _CRT_SECURE_NO_WARNINGS
 
+#define STB_IMAGE_IMPLEMENTATION
 
-
-// ≈Åadowanie bibliotek:
+// £adowanie bibliotek:
 
 #ifdef _MSC_VER                         // Check if MS Visual C compiler
 #  pragma comment(lib, "opengl32.lib")  // Compiler-specific directive to avoid manually configuration
 #  pragma comment(lib, "glu32.lib")     // Link libraries
+//#  pragma comment(lib, "lib/glew32.lib") 
 #endif
 
 
@@ -26,13 +27,19 @@
 #      undef UNICODE 
 #   endif
 #endif
+
+#include "include/GL/glew.h"
 #include <windows.h>            // Window defines
 #include <gl\gl.h>              // OpenGL
-#include <gl\GLU.h>             // GLU library
+#include <gl\glu.h>             // GLU library
 #include <math.h>				// Define for sqrt
 #include <stdio.h>
 #include "resource.h"           // About box resource identifiers.
-#include "include/OBJ_Loader.h"
+//#include "include/Lazik.h"
+#include "include/Terrain.h"
+
+#include "include/stb_image.h"
+
 
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
 #define BITMAP_ID 0x4D42		// identyfikator formatu BMP
@@ -49,7 +56,7 @@ static HINSTANCE hInstance;
 static GLfloat xRot = 0.0f;
 static GLfloat yRot = 0.0f;
 static GLfloat zRot = 0.0f;
-static GLfloat rotSpeed = 20.0f;
+static GLfloat rotSpeed = 10.0f;
 
 static GLfloat zoom = 0.0f;
 static GLfloat fov = 1000.0f;
@@ -59,13 +66,13 @@ static GLsizei lastWidth;
 static GLfloat cameraX = 50.0f;
 static GLfloat cameraY = 50.0f;
 static GLfloat cameraZ = 200.0f;
-static GLfloat cameraSpeed = 50.0f;
+static GLfloat cameraSpeed = 20.0f;
 
 // Opis tekstury
-BITMAPINFOHEADER	bitmapInfoHeader;	// nag≈Ç√≥wek obrazu
+BITMAPINFOHEADER	bitmapInfoHeader;	// nag≥Ûwek obrazu
 unsigned char*		bitmapData;			// dane tekstury
 unsigned int		texture[2];			// obiekt tekstury
-
+unsigned int tekstury[2];
 
 // Declaration for Window procedure
 LRESULT CALLBACK WndProc(HWND    hWnd,
@@ -104,6 +111,31 @@ void ReduceToUnit(float vector[3])
 }
 
 
+unsigned int LoadTexture(const char* file, GLenum textureSlot)
+{
+	GLuint texHandle;
+	// Copy file to OpenGL
+	glGenTextures(textureSlot, &texHandle);
+	glBindTexture(GL_TEXTURE_2D, texHandle);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	int width, height, nrChannels;
+	const auto data = stbi_load(file, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, nrChannels, width , height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+	else
+	{
+		// nie udalo sie zaladowac pliku
+	}
+	stbi_image_free(data);
+	return texHandle;
+}
+
+
 // Points p1, p2, & p3 specified in counter clock-wise order
 void calcNormal(float v[3][3], float out[3])
 {
@@ -132,155 +164,6 @@ void calcNormal(float v[3][3], float out[3])
 }
 
 
-
-// Change viewing volume and viewport.  Called when window is resized
-void ChangeSize(GLsizei w, GLsizei h)
-{
-	GLfloat nRange = 1000.0f;
-	GLfloat fAspect;
-	// Prevent a divide by zero
-	if (h == 0)
-		h = 1;
-
-	lastWidth = w;
-	lastHeight = h;
-
-	fAspect = (GLfloat)w / (GLfloat)h;
-	// Set Viewport to window dimensions
-	glViewport(0, 0, w, h);
-
-	// Reset coordinate system
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	// Establish clipping volume (left, right, bottom, top, near, far)
-	if (w <= h)
-		glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
-	else
-		glOrtho(-nRange * w / h, nRange*w / h, -nRange, nRange, -nRange, nRange);
-
-	// Establish perspective: 
-	
-	//gluPerspective(60.0f,fAspect,1.0,400);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-
-
-// This function does any needed initialization on the rendering
-// context.  Here it sets up and initializes the lighting for
-// the scene.
-void SetupRC()
-{
-	// Light values and coordinates
-	//GLfloat  ambientLight[] = { 0.3f, 0.3f, 0.3f, 1.0f };
-	//GLfloat  diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	//GLfloat  specular[] = { 1.0f, 1.0f, 1.0f, 1.0f};
-	//GLfloat	 lightPos[] = { 0.0f, 150.0f, 150.0f, 1.0f };
-	//GLfloat  specref[] =  { 1.0f, 1.0f, 1.0f, 1.0f };
-
-
-	glEnable(GL_DEPTH_TEST);	// Hidden surface removal
-	glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
-	//glEnable(GL_CULL_FACE);		// Do not calculate inside of jet
-
-	// Enable lighting
-	//glEnable(GL_LIGHTING);
-
-	// Setup and enable light 0
-	//glLightfv(GL_LIGHT0,GL_AMBIENT,ambientLight);
-	//glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuseLight);
-	//glLightfv(GL_LIGHT0,GL_SPECULAR,specular);
-	//glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
-	//glEnable(GL_LIGHT0);
-
-	// Enable color tracking
-	//glEnable(GL_COLOR_MATERIAL);
-
-	// Set Material properties to follow glColor values
-	//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-
-	// All materials hereafter have full specular reflectivity
-	// with a high shine
-	//glMaterialfv(GL_FRONT, GL_SPECULAR,specref);
-	//glMateriali(GL_FRONT,GL_SHININESS,128);
-
-
-	// White background
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Black brush
-	glColor3f(0.0, 0.0, 0.0);
-}
-
-
-
-
-
-
-unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
-{
-	FILE *filePtr;							// wska≈∫nik pozycji pliku
-	BITMAPFILEHEADER	bitmapFileHeader;		// nag≈Ç√≥wek pliku
-	unsigned char		*bitmapImage;			// dane obrazu
-	int					imageIdx = 0;		// licznik pikseli
-	unsigned char		tempRGB;				// zmienna zamiany sk≈Çadowych
-
-	// otwiera plik w trybie "read binary"
-	filePtr = fopen(filename, "rb");
-	if (filePtr == NULL)
-		return NULL;
-
-	// wczytuje nag≈Ç√≥wek pliku
-	fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
-
-	// sprawdza, czy jest to plik formatu BMP
-	if (bitmapFileHeader.bfType != BITMAP_ID)
-	{
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// wczytuje nag≈Ç√≥wek obrazu
-	fread(bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
-
-	// ustawia wska≈∫nik pozycji pliku na poczƒÖtku danych obrazu
-	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
-
-	// przydziela pamiƒôƒá buforowi obrazu
-	bitmapImage = (unsigned char*)malloc(bitmapInfoHeader->biSizeImage);
-
-	// sprawdza, czy uda≈Ço siƒô przydzieliƒá pamiƒôƒá
-	if (!bitmapImage)
-	{
-		free(bitmapImage);
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// wczytuje dane obrazu
-	fread(bitmapImage, 1, bitmapInfoHeader->biSizeImage, filePtr);
-
-	// sprawdza, czy dane zosta≈Çy wczytane
-	if (bitmapImage == NULL)
-	{
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// zamienia miejscami sk≈Çadowe R i B 
-	for (imageIdx = 0; imageIdx < bitmapInfoHeader->biSizeImage; imageIdx += 3)
-	{
-		tempRGB = bitmapImage[imageIdx];
-		bitmapImage[imageIdx] = bitmapImage[imageIdx + 2];
-		bitmapImage[imageIdx + 2] = tempRGB;
-	}
-
-	// zamyka plik i zwraca wska≈∫nik bufora zawierajƒÖcego wczytany obraz
-	fclose(filePtr);
-	return bitmapImage;
-}
 
 void cegla(double x, double y, double z)
 {
@@ -455,7 +338,7 @@ void kolaL(double r, double h)
 void kolpaki(double r, double h)
 {
 	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kolpak√≥w z jednej strony
+	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kolpakÛw z jednej strony
 	{
 		double OX = 0 + i, OY = 0, OZ = -2;	//-2 zeby wystawaly z kol
 		double x, y, alpha, PI = 3.14;
@@ -629,14 +512,14 @@ void scian(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(p_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//g√≥ra
+	glBegin(GL_TRIANGLE_STRIP);		//gÛra
 	glVertex3fv(g_x);
 	glVertex3fv(g_xz);
 	glVertex3fv(g_xx);
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//prz√≥d
+	glBegin(GL_TRIANGLE_STRIP);		//przÛd
 	glVertex3fv(p_x);
 	glVertex3fv(p_xz);
 	glVertex3fv(g_x);
@@ -656,7 +539,7 @@ void scian(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//ty≈Ç
+	glBegin(GL_TRIANGLE_STRIP);		//ty≥
 	glVertex3fv(p_xx);
 	glVertex3fv(p_xxz);
 	glVertex3fv(g_xx);
@@ -685,14 +568,14 @@ void maska(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(p_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//g√≥ra
+	glBegin(GL_TRIANGLE_STRIP);		//gÛra
 	glVertex3fv(g_x);
 	glVertex3fv(g_xz);
 	glVertex3fv(g_xx);
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//prz√≥d
+	glBegin(GL_TRIANGLE_STRIP);		//przÛd
 	glVertex3fv(p_x);
 	glVertex3fv(p_xz);
 	glVertex3fv(g_x);
@@ -712,7 +595,7 @@ void maska(float x, float y, float z, float platform_X, float platform_Y, float 
 	glVertex3fv(g_xxz);
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//ty≈Ç
+	glBegin(GL_TRIANGLE_STRIP);		//ty≥
 	glVertex3fv(p_xx);
 	glVertex3fv(p_xxz);
 	glVertex3fv(g_xx);
@@ -766,101 +649,224 @@ void antena(double r, double h, double OX, double OY, double OZ)
 }
 
 
-void ladowanie(void)
+// Change viewing volume and viewport.  Called when window is resized
+void ChangeSize(GLsizei w, GLsizei h)
 {
-	objl::Loader floor;
-	glPushMatrix();
+	GLfloat nRange = 100.0f;
+	GLfloat fAspect;
+	// Prevent a divide by zero
+	if (h == 0)
+		h = 1;
 
-	glRotatef(0, 0, 0, 0);
-	glScalef(200, 200, 200);
+	lastWidth = w;
+	lastHeight = h;
 
-	float x_position = 0;
-	float y_position = -0.05;
-	float z_position = 0;
+	fAspect = (GLfloat)w / (GLfloat)h;
+	// Set Viewport to window dimensions
+	glViewport(0, 0, w, h);
 
-	if (floor.LoadFile("objects/terrain3.obj"))
-	{
-		for (int i = 0; i < floor.LoadedMeshes.size(); i++)
-		{
-			objl::Mesh curMesh = floor.LoadedMeshes[i];
+	// Reset coordinate system
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 
-			for (int j = 0; j < curMesh.Indices.size(); j += 3)
-			{
-				glBegin(GL_TRIANGLES);
-				glColor3f(1, 0, 0);
-				if (i == 0) glColor3f(1, 0, 0);
-				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j]].Position.X + x_position,
-					curMesh.Vertices[curMesh.Indices[j]].Position.Y + y_position,
-					curMesh.Vertices[curMesh.Indices[j]].Position.Z + z_position
-				);
+	// Establish clipping volume (left, right, bottom, top, near, far)
+	/*
+	if (w <= h)
+		glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
+	else
+		glOrtho(-nRange * w / h, nRange*w / h, -nRange, nRange, -nRange, nRange);
+	*/
+	// Establish perspective: 
 
-				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.X + x_position,
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Y + y_position,
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Z + z_position
-				);
+	gluPerspective(60.0f, fAspect, 1.0, fov);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
-				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.X + x_position,
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Y + y_position,
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Z + z_position
-				);
-				glEnd();
-			}
-		}
-	}
+
 }
-//CAMERA
 
 
+
+// This function does any needed initialization on the rendering
+// context.  Here it sets up and initializes the lighting for
+// the scene.
+void SetupRC()
+{
+	// Light values and coordinates
+	//GLfloat  ambientLight[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+	//GLfloat  diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	//GLfloat  specular[] = { 1.0f, 1.0f, 1.0f, 1.0f};
+	//GLfloat	 lightPos[] = { 0.0f, 150.0f, 150.0f, 1.0f };
+	//GLfloat  specref[] =  { 1.0f, 1.0f, 1.0f, 1.0f };
+
+
+	glEnable(GL_DEPTH_TEST);	// Hidden surface removal
+	glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
+	//glEnable(GL_CULL_FACE);		// Do not calculate inside of jet
+
+	// Enable lighting
+	//glEnable(GL_LIGHTING);
+
+	// Setup and enable light 0
+	//glLightfv(GL_LIGHT0,GL_AMBIENT,ambientLight);
+	//glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuseLight);
+	//glLightfv(GL_LIGHT0,GL_SPECULAR,specular);
+	//glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
+	//glEnable(GL_LIGHT0);
+
+	// Enable color tracking
+	//glEnable(GL_COLOR_MATERIAL);
+
+	// Set Material properties to follow glColor values
+	//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+	// All materials hereafter have full specular reflectivity
+	// with a high shine
+	//glMaterialfv(GL_FRONT, GL_SPECULAR,specref);
+	//glMateriali(GL_FRONT,GL_SHININESS,128);
+
+
+	// White background
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	// Black brush
+	glColor3f(0.0, 0.0, 0.0);
+
+	
+}
+
+
+// LoadBitmapFile
+// opis: ≥aduje mapÍ bitowπ z pliku i zwraca jej adres.
+//       Wype≥nia strukturÍ nag≥Ûwka.
+//	 Nie obs≥uguje map 8-bitowych.
+unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
+{
+	FILE *filePtr;							// wskaünik pozycji pliku
+	BITMAPFILEHEADER	bitmapFileHeader;		// nag≥Ûwek pliku
+	unsigned char		*bitmapImage;			// dane obrazu
+	int					imageIdx = 0;		// licznik pikseli
+	unsigned char		tempRGB;				// zmienna zamiany sk≥adowych
+
+	// otwiera plik w trybie "read binary"
+	filePtr = fopen(filename, "rb");
+	if (filePtr == NULL)
+		return NULL;
+
+	// wczytuje nag≥Ûwek pliku
+	fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
+
+	// sprawdza, czy jest to plik formatu BMP
+	if (bitmapFileHeader.bfType != BITMAP_ID)
+	{
+		fclose(filePtr);
+		return NULL;
+	}
+
+	// wczytuje nag≥Ûwek obrazu
+	fread(bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
+
+	// ustawia wskaünik pozycji pliku na poczπtku danych obrazu
+	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
+
+	// przydziela pamiÍÊ buforowi obrazu
+	bitmapImage = (unsigned char*)malloc(bitmapInfoHeader->biSizeImage);
+
+	// sprawdza, czy uda≥o siÍ przydzieliÊ pamiÍÊ
+	if (!bitmapImage)
+	{
+		free(bitmapImage);
+		fclose(filePtr);
+		return NULL;
+	}
+
+	// wczytuje dane obrazu
+	fread(bitmapImage, 1, bitmapInfoHeader->biSizeImage, filePtr);
+
+	// sprawdza, czy dane zosta≥y wczytane
+	if (bitmapImage == NULL)
+	{
+		fclose(filePtr);
+		return NULL;
+	}
+
+	// zamienia miejscami sk≥adowe R i B 
+	for (imageIdx = 0; imageIdx < bitmapInfoHeader->biSizeImage; imageIdx += 3)
+	{
+		tempRGB = bitmapImage[imageIdx];
+		bitmapImage[imageIdx] = bitmapImage[imageIdx + 2];
+		bitmapImage[imageIdx + 2] = tempRGB;
+	}
+
+	// zamyka plik i zwraca wskaünik bufora zawierajπcego wczytany obraz
+	fclose(filePtr);
+	return bitmapImage;
+}
 // Called to draw scene
 void RenderScene(void)
 {
 	//float normal[3];	// Storeage for calculated surface normal
-
 	// Clear the window with current clearing color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	//SposÛb na odrÛünienie "przedniej" i "tylniej" úciany wielokπta:
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	
 	// Save the matrix state and do the rotations
 	glPushMatrix();
+
 	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
 	glRotatef(yRot, 0.0f, 1.0f, 0.0f);
 	glRotatef(zRot, 0.0f, 0.0f, 1.0f);
-
-	/////////////////////////////////////////////////////////////////
-	// MIEJSCE NA KOD OPENGL DO TWORZENIA WLASNYCH SCEN:		   //
-	/////////////////////////////////////////////////////////////////
-
-	//Spos√≥b na odr√≥≈∫nienie "przedniej" i "tylniej" ≈õciany wielokƒÖta:
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glRotatef(zoom, 0, 0, 0);
 
 	gluLookAt(cameraX, cameraY, cameraZ, 0 + cameraX, 0 + cameraY, 0.0, 0.0, 1.0, 0.0);
 	
-	glRotatef(zoom, 0, 0, 0);
+	glPushMatrix();
 
+	glRotatef(90, 1, 0, 0);
+	glScalef(2, 2, 2);
+	Terrain powierzchnia("objects/mars.obj",0,0,0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, tekstury[0]);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	powierzchnia.draw();
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glPopMatrix();
+
+	glPushMatrix();
+
+
+	Terrain objekty("objects/rock/rock.obj", 50, -100, 4);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, tekstury[1]);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	objekty.draw();
+
+
+	glPopMatrix();
+
+
+
+
+	//glScalef(0.5,0.5, 0.5);
 
 
 	//cegla(30, 40, 30);
-	//DrawGrid(500);			//mozna wywalic
-	kolaL(10, 10);	//promien,szerokosc k√≥≈Ç
+//DrawGrid(500);			//mozna wywalic
+	kolaL(10, 10);	//promien,szerokosc kÛ≥
 	kolpaki(5, 5);
 	lacznik(2, 60);
 	//blotnikPrzod(10.0, 10.0, 50.0, 0.0);	//wielkosc 1,wielkosc 2.,szerokosc,jak wysoko ma byc polozone(OY)
 
-	//maska(0.0f, 10.0f, 10.0f,50,20,50);	//polozenie: OY i OZ=10 bo 10 majƒÖ ko≈Ça, 3 ost. param to wielkosc maski w XYZ
+	//maska(0.0f, 10.0f, 10.0f,50,20,50);	//polozenie: OY i OZ=10 bo 10 majπ ko≥a, 3 ost. param to wielkosc maski w XYZ
 	nadwozie(0, 0, 10);
 
 	antena(2, 50, 90, 5, 20);
 	antena(2, 50, 90, 5, 50);
-	
 
 
-	ladowanie();
-	glPopMatrix();
-	/////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 
@@ -1071,12 +1077,15 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
 		SetupRC();
-		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
+		//glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
-		// ¬≥aduje pierwszy obraz tekstury:
+		tekstury[0]=LoadTexture("objects/mars.png", 1);
+		tekstury[1] = LoadTexture("objects/rock.png", 1);
+
+		// ≥aduje pierwszy obraz tekstury:
 		//bitmapData = LoadBitmapFile("Bitmapy\\checker.bmp", &bitmapInfoHeader);
 
-		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
+	/*	glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1087,11 +1096,11 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		// tworzy obraz tekstury
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
 			bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
-
+		
 		if (bitmapData)
 			free(bitmapData);
 
-		// ¬≥aduje drugi obraz tekstury:
+		// ≥aduje drugi obraz tekstury:
 		//	bitmapData = LoadBitmapFile("Bitmapy\\crate.bmp", &bitmapInfoHeader);
 		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
@@ -1107,8 +1116,8 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 
 		if (bitmapData)
 			free(bitmapData);
-
-		// ustalenie sposobu mieszania tekstury z t¬≥em
+			*/
+		// ustalenie sposobu mieszania tekstury z t≥em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		break;
 
@@ -1196,23 +1205,25 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		// Key press, check for arrow keys to do cube rotation.
 	case WM_KEYDOWN:
 	{
-		if (wParam == VK_UP)
+		if (wParam == 'R')
 			xRot -= rotSpeed;
 
-		if (wParam == VK_DOWN)
+		if (wParam == 'F')
 			xRot += rotSpeed;
 
-		if (wParam == VK_LEFT)
-			yRot -= rotSpeed;
 
-		if (wParam == VK_RIGHT)
-			yRot += rotSpeed;
 
-		if (wParam == VK_PRIOR)
+		if (wParam == 'Q')
 			zRot -= rotSpeed;
 
-		if (wParam == VK_NEXT)
+		if (wParam == 'E')
 			zRot += rotSpeed;
+
+		if (wParam == VK_SUBTRACT)
+			zoom += 10.0f;
+
+		if (wParam == VK_ADD)
+			zoom -= 10.0f;
 
 		if (wParam == 'W')
 			cameraY += cameraSpeed;
@@ -1226,22 +1237,13 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		if (wParam == 'D')
 			cameraX += cameraSpeed;
 
-		if (wParam == 'Q')
+		if (wParam == VK_CONTROL)
 			cameraZ -= cameraSpeed;
 
-		if (wParam == 'E')
+		if (wParam == VK_SHIFT)
 			cameraZ += cameraSpeed;
 
-		if (wParam == VK_SUBTRACT)
-			zoom += rotSpeed;
 
-		if (wParam == VK_ADD)
-			zoom -= rotSpeed;
-
-
-		xRot = (const int)xRot % 360;
-		yRot = (const int)yRot % 360;
-		zRot = (const int)zRot % 360;
 
 		InvalidateRect(hWnd, NULL, FALSE);
 	}
@@ -1276,6 +1278,7 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 
 	return (0L);
 }
+
 
 
 
