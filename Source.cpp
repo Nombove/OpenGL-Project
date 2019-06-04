@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include "resource.h"           // About box resource identifiers.
 #include "jeep.h"
+#include <iostream>
 //#include "include/Lazik.h"
 #include "include/Terrain.h"
 
@@ -273,397 +274,6 @@ void DrawGrid(int HALF_GRID_SIZE)
 	glEnd();
 }
 
-
-void kolaL(double r, double h)
-{
-	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kol z jednej strony
-	{
-		double OX = 0 + i, OY = 0, OZ = 0;
-		double x, y, alpha, PI = 3.14;
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-
-		//druga para kol
-
-		OZ = 60; //OZ przesuwa prawe kola 
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-	}
-
-
-}
-
-void kolpaki(double r, double h)
-{
-	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kolpaków z jednej strony
-	{
-		double OX = 0 + i, OY = 0, OZ = -2;	//-2 zeby wystawaly z kol
-		double x, y, alpha, PI = 3.14;
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.8, 0.8);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-
-		//druga para kol
-
-		OZ = 60 + 7; //OZ przesuwa prawe kolpaki (65 - zerowa wartosc wychodzenia z kola xD) czyli 65+2=67 zeby bylo sy,etrycznie do 1 prary kolpakow
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_QUAD_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-	}
-
-
-}
-
-void lacznik(double r, double h)
-{
-	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc poloczen kol 
-	{
-		double OX = 0 + i, OY = 0, OZ = 5;	//OZ=5 do polowy kol
-		double x, y, alpha, PI = 3.14;
-		glBegin(GL_QUAD_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		//mozna wywalic to co na dole ale wtedy zostanie sciana boczna
-
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.4, 0.4);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-	}
-}
-
-void blotnikPrzod(double r1, double r2, double h, double d)
-{
-	double PI = 3.14, alpha, x, y;
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3d(0.1, 0.0, 0);	//czarny
-	glVertex3d(0, 0, 0);
-	for (alpha = PI; alpha <= 2 * PI; alpha += PI / 8.0)
-	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, 0);
-	}
-	glEnd();
-
-	glBegin(GL_QUAD_STRIP);
-	for (alpha = 0; alpha >= -PI; alpha -= PI / 8.0)
-	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, h);
-		glVertex3d(x, y, 0);
-	}
-	glEnd();
-
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex3d(0, 0, h);
-	for (alpha = 0; alpha >= -PI; alpha -= PI / 8.0)
-	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, h);
-	}
-	glEnd();
-
-}
-
-
-void scian(float x, float y, float z, float platform_X, float platform_Y, float platform_Z) {
-
-
-	GLfloat p_x[3] = { x, y, z };
-	GLfloat p_xx[3] = { x + platform_X, y, z };
-	GLfloat p_xz[3] = { x, y, z + platform_Z };
-	GLfloat p_xxz[3] = { x + platform_X, y, z + platform_Z };
-
-	GLfloat g_x[3] = { x , y + platform_Y, z };
-	GLfloat g_xx[3] = { x + platform_X, y + platform_Y, z };
-	GLfloat g_xz[3] = { x, y + platform_Y, z + platform_Z };
-	GLfloat g_xxz[3] = { x + platform_X, y + platform_Y, z + platform_Z };
-
-	glBegin(GL_TRIANGLE_STRIP);		//podstawa
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//góra
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//przód
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_x);
-	glVertex3fv(p_xx);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xx);
-	glEnd();
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//ty³
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
-}
-
-void maska(float x, float y, float z, float platform_X, float platform_Y, float platform_Z) {
-
-	float zzz = platform_Z / 5;
-
-	GLfloat p_x[3] = { x, y, z };
-	GLfloat p_xx[3] = { x + platform_X, y, z };
-	GLfloat p_xz[3] = { x, y, z + platform_Z };
-	GLfloat p_xxz[3] = { x + platform_X, y, z + platform_Z };
-
-	GLfloat g_x[3] = { x + platform_X / 2 , y + platform_Y, z + zzz };
-	GLfloat g_xx[3] = { x + platform_X, y + platform_Y, z + zzz };
-	GLfloat g_xz[3] = { x + platform_X / 2, y + platform_Y, z + platform_Z - zzz };
-	GLfloat g_xxz[3] = { x + platform_X, y + platform_Y, z + platform_Z - zzz };
-
-	glBegin(GL_TRIANGLE_STRIP);		//podstawa
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//góra
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//przód
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_x);
-	glVertex3fv(p_xx);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xx);
-	glEnd();
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//ty³
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
-}
-
-void nadwozie(float x, float y, float z) {
-
-	float nadwozieX = 100, nadwozieY = 5, nadwozieZ = 50;
-	float maskaX = 60, maskaY = 35, maskaZ = 50;
-	float pakaX = nadwozieX - maskaX, pakaY = 8, pakaZ = 2;
-	float oddalenie_scian = 3;
-
-
-	maska(x, y + nadwozieY, z, maskaX, maskaY, maskaZ);
-	scian(x, y, z, nadwozieX, nadwozieY, nadwozieZ);
-	scian(x + maskaX, y + nadwozieY, z + oddalenie_scian, pakaX, pakaY, pakaZ);
-	scian(x + maskaX, y + nadwozieY, z + nadwozieZ - oddalenie_scian - pakaZ, pakaX, pakaY, pakaZ);
-
-	scian(x + nadwozieX - pakaZ, y + nadwozieY, z + oddalenie_scian + pakaZ,
-		pakaZ, pakaY, nadwozieZ - 2 * (oddalenie_scian + pakaZ));
-}
-
-
-void antena(double r, double h, double OX, double OY, double OZ)
-{
-
-	double x, z, alpha, PI = 3.14;
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3d(0.8, 0.0, 0);
-	glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-	for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-	{
-		x = r * sin(alpha);
-		z = r * cos(alpha);
-		glVertex3d(x + OX, 0 + OY, z + OZ);
-
-	}
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);
-	for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-	{
-		x = r * sin(alpha);
-		z = r * cos(alpha);
-		glVertex3d(x + OX, 0 + OY, z + OZ);
-		glVertex3d(OX, OY + h, OZ);
-	}
-	glEnd();
-}
-
 void axxxes() {
 
 	glBegin(GL_LINES);
@@ -682,6 +292,30 @@ void axxxes() {
 	glColor3f(0.1, 0.2, 0.8);
 	glVertex3f(0.0f, 0.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 1000.0f);
+	glEnd();
+}
+
+void kolizja(double ox, double oy, double oz, double r) {
+
+	/*int size = 50;
+	glBegin(GL_TRIANGLE_STRIP);
+
+	glVertex3f(x, z, y);       // P1
+	glVertex3f(x, z, y + size);       // P2
+	glVertex3f(x + size, z, y + size);       // P3
+	glVertex3f(x + size, z, y);       // P4
+
+	glEnd();*/
+	double x = 20, y = 20, alpha, PI = 3.14;
+	glBegin(GL_TRIANGLE_FAN);
+	glColor3d(0.8, 0.0, 0);
+	glVertex3d(0 + ox, 0 + oy, 0 + oz);
+	for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
+	{
+		x = r * sin(alpha);
+		y = r * cos(alpha);
+		glVertex3d(x + ox, 0+ oy ,y + oz);
+	}
 	glEnd();
 }
 
@@ -851,6 +485,8 @@ void RenderScene(void)
 		posX += pred * sin(axMove * GL_PI / 180);
 		posZ += pred * cos(axMove*GL_PI / 180);
 
+		std::cout << posX << " " << posZ << std::endl;
+
 		glRotatef(xRot, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRot, 0.0f, 1.0f, 0.0f);
 		glRotatef(zRot, 0.0f, 0.0f, 1.0f);
@@ -865,7 +501,7 @@ void RenderScene(void)
 	
 			Terrain powierzchnia("objects/mars.obj",0,-0.1,0);
 			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, tekstury[0]);
+			glBindTexture(GL_TEXTURE_2D, tekstury[1]);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			powierzchnia.draw();
 			glEnd();
@@ -874,9 +510,10 @@ void RenderScene(void)
 		glPopMatrix();
 
 		glPushMatrix();
-			Terrain objekty("objects/rock/rock.obj", 50, -100, 4);
+			glScalef(.1,.1,.1);
+			Terrain objekty("objects/rock/rock.obj", 0, 0, 0);
 			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, tekstury[1]);
+			glBindTexture(GL_TEXTURE_2D, tekstury[0]);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			objekty.draw();
 		glPopMatrix();
@@ -1113,7 +750,7 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		//glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
 		tekstury[0]=LoadTexture("objects/mars.png", 1);
-		tekstury[1] = LoadTexture("objects/rock.png", 1);
+		tekstury[1] = LoadTexture("objects/mars0.png", 1);
 
 		// ³aduje pierwszy obraz tekstury:
 		//bitmapData = LoadBitmapFile("Bitmapy\\checker.bmp", &bitmapInfoHeader);
