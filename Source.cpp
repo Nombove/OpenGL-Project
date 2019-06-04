@@ -38,7 +38,8 @@
 #include <stdio.h>
 #include "resource.h"           // About box resource identifiers.
 #include "jeep.h"
-#include <iostream>
+#include "AntTweakBar.h"
+
 //#include "include/Lazik.h"
 #include "include/Terrain.h"
 
@@ -52,8 +53,13 @@
 
 GLfloat axMove = 0.f;
 GLfloat fwdMove = 0.1f;
+GLfloat axMoveDeg = .0f;
 double posX = 0, posY = 0, posZ = 0;
 jeep lazik(0, 0, 0);
+double lazX = 0;
+double lazZ = 0;
+
+double col = 0;
 
 double s_pred = 15;
 double pred = 0;
@@ -295,18 +301,20 @@ void axxxes() {
 	glEnd();
 }
 
-void kolizja(double ox, double oy, double oz, double r) {
+//void kolizja(double ox, double oy, double oz, double r) {
 
-	/*int size = 50;
-	glBegin(GL_TRIANGLE_STRIP);
+void kolizja(double x, double y, double z, double s){
+
+	int size = 50;
+	glBegin(GL_POLYGON);
 
 	glVertex3f(x, z, y);       // P1
 	glVertex3f(x, z, y + size);       // P2
 	glVertex3f(x + size, z, y + size);       // P3
 	glVertex3f(x + size, z, y);       // P4
 
-	glEnd();*/
-	double x = 20, y = 20, alpha, PI = 3.14;
+	glEnd();
+	/*double x = 20, y = 20, alpha, PI = 3.14;
 	glBegin(GL_TRIANGLE_FAN);
 	glColor3d(0.8, 0.0, 0);
 	glVertex3d(0 + ox, 0 + oy, 0 + oz);
@@ -316,7 +324,7 @@ void kolizja(double ox, double oy, double oz, double r) {
 		y = r * cos(alpha);
 		glVertex3d(x + ox, 0+ oy ,y + oz);
 	}
-	glEnd();
+	glEnd();*/
 }
 
 
@@ -331,7 +339,7 @@ void ChangeSize(GLsizei w, GLsizei h)
 
 	lastWidth = w;
 	lastHeight = h;
-
+	TwWindowSize(w, h);
 	fAspect = (GLfloat)w / (GLfloat)h;
 	// Set Viewport to window dimensions
 	glViewport(0, 0, w, h);
@@ -373,6 +381,8 @@ void SetupRC()
 
 	glEnable(GL_DEPTH_TEST);	// Hidden surface removal
 	glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
+	TwInit(TW_OPENGL, NULL);
+	// or
 	//glEnable(GL_CULL_FACE);		// Do not calculate inside of jet
 
 	// Enable lighting
@@ -402,8 +412,28 @@ void SetupRC()
 	// Black brush
 	glColor3f(0.0, 0.0, 0.0);
 
+	TwInit(TW_OPENGL, NULL);
+	TwBar *bar;
+	bar = TwNewBar("Params");
+
+
+	TwAddVarRW(bar, "Angle", TW_TYPE_FLOAT, &axMoveDeg, "precision=1");
+	TwAddVarRW(bar, "x position", TW_TYPE_FLOAT, &posX, "precision=1");
+	TwAddVarRW(bar, "y position", TW_TYPE_FLOAT, &posZ, "precision=1");
+	TwAddVarRW(bar, "col", TW_TYPE_FLOAT, &col, "precision=1");
+
 	
+
+	GLfloat refresh = 0.1;
+	TwSetParam(bar, NULL, "refresh", TW_PARAM_FLOAT, 1, &refresh);
+
+	int barSize[2] = { 224, 250 };
+	TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
 }
+
+
+	
+
 
 
 // LoadBitmapFile
@@ -475,17 +505,16 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 // Called to draw scene
 void RenderScene(void)
 {
-	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
 	glPushMatrix();
 		
 		posX += pred * sin(axMove * GL_PI / 180);
-		posZ += pred * cos(axMove*GL_PI / 180);
+		posZ += pred * cos(axMove * GL_PI / 180);
 
-		std::cout << posX << " " << posZ << std::endl;
+
+
 
 		glRotatef(xRot, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRot, 0.0f, 1.0f, 0.0f);
@@ -518,16 +547,14 @@ void RenderScene(void)
 			objekty.draw();
 		glPopMatrix();
 
-
-
-
 		//axxxes();
 
 		glPushMatrix();
 			
 			glTranslatef(posX , posY, posZ);
 			pred = 0;
-				glRotatef(axMove, 0, 1, 0);
+			glRotatef(axMove, 0, 1, 0);
+
 
 			//glTranslatef(-posX, -posY, -posZ);
 			//glPushMatrix();
@@ -537,10 +564,14 @@ void RenderScene(void)
 			//glPopMatrix();
 		
 		glPopMatrix();
+		kolizja(200, 0, 0, 50);
 
+		
 
+		TwDraw();
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
+	axMoveDeg = abs(fmod(axMove, 360));
 	glFlush();
 }
 
@@ -959,7 +990,8 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		return (DefWindowProc(hWnd, message, wParam, lParam));
 
 	}
-
+	if (TwEventWin(hWnd, message, wParam, lParam)) // send event message to AntTweakBar
+		return 0;
 	return (0L);
 }
 
@@ -1013,6 +1045,8 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 
 	// Closed from sysbox
 	case WM_CLOSE:
+		TwTerminate();
+
 		EndDialog(hDlg, TRUE);
 		break;
 	}
