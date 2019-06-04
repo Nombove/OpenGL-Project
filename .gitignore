@@ -10,3 +10,9 @@ Release/rover.tlog/rover.write.1u.tlog
 Release/Source.obj
 Release/vc141.pdb
 Release/Łazik.log
+*.tlog
+*.lastbuildstate
+*.log
+*.pdb
+*.ipdb
+*.iobj
