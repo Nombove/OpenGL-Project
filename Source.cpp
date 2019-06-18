@@ -40,6 +40,7 @@
 #include "jeep.h"
 #include "AntTweakBar.h"
 #include <time.h>
+#include <fstream>
 
 //#include "include/Lazik.h"
 #include "include/Terrain.h"
@@ -79,6 +80,7 @@ bool collision = false;
 bool colliding = false;
 int collisionTimer = 0;
 bool points[5]{ false };
+bool changed = false;
 
 
 GLfloat posX = 0, posY = 0, posZ = 0;
@@ -91,6 +93,9 @@ GLfloat center[3]{50, 0, 25};
 std::vector<GLfloat> midPointLocation{ 0.0f,0.0f,0.0f };
 std::vector<GLfloat> midPointLocationScaled{ 0,0,0 };
 
+GLfloat wyniki[3]{ 999, 999, 999 };
+
+std::fstream plik;
 
 // Color Palette handle
 HPALETTE hPalette = NULL;
@@ -413,9 +418,16 @@ void SetupRC()
 	glColor3f(0.0, 0.0, 0.0);
 
 
-
-	//t = clock();
 	
+	plik.open("1.txt", std::ios::in);
+	if (plik.good() == true)
+	{
+		for (int i = 0; i < 3; i++)
+			plik >> wyniki[i];
+
+		plik.close();
+	}
+
 
 
 
@@ -423,15 +435,18 @@ void SetupRC()
 	TwBar *bar;
 	bar = TwNewBar("Collect all points");
 
-	TwAddVarRW(bar, "Angle", TW_TYPE_FLOAT, &axMoveDeg, "precision=1");
+	/*TwAddVarRW(bar, "Angle", TW_TYPE_FLOAT, &axMoveDeg, "precision=1");
 	TwAddVarRW(bar, "x position", TW_TYPE_FLOAT, &posX, "precision=1");
 	TwAddVarRW(bar, "y position", TW_TYPE_FLOAT, &posZ, "precision=1");
 	TwAddVarRW(bar, "velocityL", TW_TYPE_FLOAT, &velocityL, "precision=1");
 	TwAddVarRW(bar, "velocityR", TW_TYPE_FLOAT, &velocityR, "precision=1");
-	TwAddVarRW(bar, "velocity", TW_TYPE_FLOAT, &velocity, "precision=1");
+	TwAddVarRW(bar, "velocity", TW_TYPE_FLOAT, &velocity, "precision=1");*/
 
 
-	TwAddVarRW(bar, "Best Time ", TW_TYPE_FLOAT, &secondsPassed, " group=Winners precision=1");
+	TwAddVarRW(bar, "First ", TW_TYPE_FLOAT, &wyniki[0], " group=Winners precision=1");
+	TwAddVarRW(bar, "Second ", TW_TYPE_FLOAT, &wyniki[1], " group=Winners precision=1");
+	TwAddVarRW(bar, "Thrid ", TW_TYPE_FLOAT, &wyniki[2], " group=Winners precision=1");
+
 
 	TwAddVarRW(bar, "Your Time", TW_TYPE_FLOAT, &secondsPassed, " group=Time precision=1");
 
@@ -549,7 +564,30 @@ void RenderScene(void)
 		timePassed = testTime - startTime;
 		secondsPassed = timePassed / (double)CLOCKS_PER_SEC;
 	}
-	
+	if(stop && !changed){
+		if (secondsPassed <= wyniki[0]) {
+
+			wyniki[2] = wyniki[1];
+			wyniki[1] = wyniki[0];
+			wyniki[0] = secondsPassed;
+		}
+		else if (secondsPassed <= wyniki[1]) {
+			wyniki[2] = wyniki[1];
+			wyniki[1] = secondsPassed;
+		}
+		else if(secondsPassed <= wyniki[2])
+			wyniki[2] = secondsPassed;
+
+		plik.open("1.txt", std::ios::out);
+		if (plik.good() == true)
+		{
+			for (auto a : wyniki)
+				plik << a << std::endl;
+
+			plik.close();
+		}
+		changed = true;
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//if (posX >= 150 && posX <= 350 && posZ >=-50 && posZ >= 150)
@@ -575,20 +613,17 @@ void RenderScene(void)
 
 	
 		gluLookAt(posX, posY + 180, posZ - 300, posX, posY, posZ, 0.0, 1.0, 0.0);
-		//gluLookAt(posX, posY + 250, posZ -1, posX, posY, posZ, 0.0, 1.0, 0.0);
+		//gluLookAt(posX, posY + 350, posZ -1, posX, posY, posZ, 0.0, 1.0, 0.0);
 
 
-		kolizja(200, 0, 0, 100);
+		//kolizja(200, 0, 0, 100);
 
 		kolizja(100, 300, -10, 50);
 		kolizja(400, 50, -10, 50);
 		kolizja(-200, 0, -10, 50);
 		kolizja(600, -50, -10, 50);
 		kolizja(-100, -400, -10, 50);
-		axxxes();
 
-		//200, 0
-		//300, 100
 		for (int i = 0; i < 4; i++) {
 
 			jeepPoints[i] = jeepPointsStatic[i];
@@ -611,6 +646,20 @@ void RenderScene(void)
 
 
 		glPushMatrix();
+
+
+		glPushMatrix();
+		glScalef(0.10, 0.10, 0.10);
+
+		Terrain objekty("objects/rock.obj", 51, 0, 0);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, tekstury[1]);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		objekty.draw();
+		glScalef(10, 10, 10);
+
+		glPopMatrix();
+
 			glScalef(10, 5, 10);
 
 			glTranslatef(0, 0, 100);
@@ -629,13 +678,7 @@ void RenderScene(void)
 		glPopMatrix();
 
 
-		/*glPushMatrix();
-			Terrain objekty("objects/rock/rock.obj", 50, -100, 4);
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, tekstury[1]);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			objekty.draw();
-		glPopMatrix();*/
+		
 
 		glPushMatrix();
 
@@ -676,7 +719,7 @@ void RenderScene(void)
 					glRotatef(90, 0, 1, 0);
 					//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-			jeep lazik(0, 0, 0);
+			jeep lazik(0, -10, 0);
 			lazik.draw();
 			
 		
@@ -1085,6 +1128,8 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 			for (int i = 0; i < 5; i++)
 				points[i] = false;
 			startTime = clock();
+			changed = false;
+
 		}
 		/*int xd = 10;
 		if (velocityL > xd)	velocityL = xd;
@@ -1105,8 +1150,11 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		{
 			// Exit the program
 		case ID_FILE_EXIT:
+			
 			DestroyWindow(hWnd);
 			break;
+
+			
 
 		}
 	}
@@ -1161,9 +1209,13 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 
 	// Closed from sysbox
 	case WM_CLOSE:
+
+		
 		TwTerminate();
 
 		EndDialog(hDlg, TRUE);
+
+
 		break;
 	}
 
