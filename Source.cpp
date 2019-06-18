@@ -618,11 +618,11 @@ void RenderScene(void)
 
 		//kolizja(200, 0, 0, 100);
 
-		kolizja(100, 300, -10, 50);
-		kolizja(400, 50, -10, 50);
-		kolizja(-200, 0, -10, 50);
-		kolizja(600, -50, -10, 50);
-		kolizja(-100, -400, -10, 50);
+		if (!points[0])kolizja(100, 300, -10, 50);
+		if (!points[1])kolizja(400, 50, -10, 50);
+		if (!points[2])kolizja(-200, 0, -10, 50);
+		if (!points[3])kolizja(600, -50, -10, 50);
+		if (!points[4])kolizja(-100, -400, -10, 50);
 
 		for (int i = 0; i < 4; i++) {
 
