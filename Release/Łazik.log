@@ -1,42 +1,50 @@
 ﻿  Source.cpp
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(653): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(690): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(696): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\include\obj_loader.h(950): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(273): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(290): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(291): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(292): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(293): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(298): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(299): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(300): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(301): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(308): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(309): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(310): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(311): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(316): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(317): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(318): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(319): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(326): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(327): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(328): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(329): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(334): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(335): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(336): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(337): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(778): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(783): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(787): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(1242): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(1243): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
-c:\users\toshiba\desktop\studia\projekty\grafika projekt\source.cpp(1244): warning C4244: "=": konwersja z "int" do "GLfloat", możliwa utrata danych
-  Trwa generowanie kodu
-  1 of 880 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
-  Zakończono generowanie kodu
-  Łazik.vcxproj -> C:\Users\Toshiba\Desktop\Studia\Projekty\Grafika Projekt\Release\rover.exe
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\include\obj_loader.h(653): warning C4018: '<': signed/unsigned mismatch
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\include\obj_loader.h(690): warning C4018: '<': signed/unsigned mismatch
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\include\obj_loader.h(696): warning C4018: '<': signed/unsigned mismatch
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(63): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(71): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(203): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(204): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(205): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(206): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(211): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(212): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(213): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(214): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(221): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(222): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(223): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(224): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(229): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(230): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(231): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(232): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(239): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(240): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(241): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(242): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(247): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(248): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(249): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(250): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(295): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(301): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(307): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(413): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(474): warning C4018: '<': signed/unsigned mismatch
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(489): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(492): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(493): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(494): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(495): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(518): warning C4244: '+=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(532): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(585): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\krzysztof\desktop\opengl-project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\source.cpp(595): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+  Generating code
+  90 of 1117 functions ( 8.1%) were compiled, the rest were copied from previous compilation.
+    74 functions were new in current compilation
+    49 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Łazik.vcxproj -> C:\Users\Krzysztof\Desktop\OpenGL-Project-e1ad66aa59cb7eec3ed5fd073bda4829b0362c01\Release\Łazik.exe
