@@ -9,19 +9,46 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Header Files\Figury">
+      <UniqueIdentifier>{639a5033-d350-4106-9a24-bea8301228eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Figury">
+      <UniqueIdentifier>{264e8247-f3b9-4c8e-b3ff-903af211d497}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Parts">
-      <UniqueIdentifier>{639a5033-d350-4106-9a24-bea8301228eb}</UniqueIdentifier>
+    <Filter Include="Header Files\Lazik">
+      <UniqueIdentifier>{d81cdd3f-c4d9-447a-9e54-d5c7d2245efe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Parts">
-      <UniqueIdentifier>{264e8247-f3b9-4c8e-b3ff-903af211d497}</UniqueIdentifier>
+    <Filter Include="Source Files\Lazik">
+      <UniqueIdentifier>{15574634-e166-484a-b560-04eb4b37a276}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Szescian.cpp">
+      <Filter>Source Files\Figury</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lazik.cpp">
+      <Filter>Source Files\Lazik</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Walec.cpp">
+      <Filter>Source Files\Figury</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Figura.cpp">
+      <Filter>Source Files\Figury</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TriangularPrism.cpp">
+      <Filter>Source Files\Figury</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Terrain.cpp">
+      <Filter>Source Files\Lazik</Filter>
+    </ClCompile>
+    <ClCompile Include="jeep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +56,31 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Szescian.h">
+      <Filter>Header Files\Figury</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lazik.h">
+      <Filter>Header Files\Lazik</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Walec.h">
+      <Filter>Header Files\Figury</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Figura.h">
+      <Filter>Header Files\Figury</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TriangularPrism.h">
+      <Filter>Header Files\Figury</Filter>
+    </ClInclude>
     <ClInclude Include="include\OBJ_Loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Terrain.h">
+      <Filter>Header Files\Lazik</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="jeep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

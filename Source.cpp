@@ -1,16 +1,18 @@
 ﻿// Gl_template.c
-//Wyłšczanie błędów przed "fopen"
+//Wy��czanie b��d�w przed "fopen"
 #define  _CRT_SECURE_NO_WARNINGS
 
+#define STB_IMAGE_IMPLEMENTATION
 
-
-// Ładowanie bibliotek:
+// �adowanie bibliotek:
 
 #ifdef _MSC_VER                         // Check if MS Visual C compiler
 #  pragma comment(lib, "opengl32.lib")  // Compiler-specific directive to avoid manually configuration
 #  pragma comment(lib, "glu32.lib")     // Link libraries
+//#  pragma comment(lib, "lib/glew32.lib") 
 #endif
 
+#define _USE_MATH_DEFINES
 
 
 
@@ -26,17 +28,69 @@
 #      undef UNICODE 
 #   endif
 #endif
+
+#include "include/GL/glew.h"
 #include <windows.h>            // Window defines
 #include <gl\gl.h>              // OpenGL
-#include <gl\GLU.h>             // GLU library
-#include <math.h>				// Define for sqrt
+#include <gl\glu.h>             // GLU library
+//#include <math.h>				// Define for sqrt
+#include <cmath>
 #include <stdio.h>
 #include "resource.h"           // About box resource identifiers.
-#include "include/OBJ_Loader.h"
+#include "jeep.h"
+#include "AntTweakBar.h"
+#include <time.h>
+
+//#include "include/Lazik.h"
+#include "include/Terrain.h"
+
+#include "include/stb_image.h"
+
 
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
 #define BITMAP_ID 0x4D42		// identyfikator formatu BMP
 #define GL_PI 3.14
+
+
+clock_t startTime = clock(); 
+clock_t testTime;
+clock_t timePassed;
+GLfloat secondsPassed;
+
+
+
+//GLfloat jeepPointsStatic[4]{ 47.5, 49.5, -57.5, -57.5 };
+GLfloat jeepPointsStatic[4]{ 55, 45, -51, -41 };
+
+GLfloat  jeepPoints[4]{ 0 };
+
+GLfloat axMove = 0.f;
+GLfloat angleSpeed = 10.0f;
+GLfloat swingRad = 0.0f;
+GLfloat axMoveDeg = 0;
+
+GLfloat const_velocity = 0.5f;
+GLfloat velocityL = 0.0f;
+GLfloat velocityR = 0.0f;
+GLfloat velocity = 0.0f;
+GLfloat momentumConst = 0.1*const_velocity;
+bool velocityUpdate = 0;
+bool collision = false;
+bool colliding = false;
+int collisionTimer = 0;
+bool points[5]{ false };
+
+
+GLfloat posX = 0, posY = 0, posZ = 0;
+jeep lazik(0, 0, 0);
+GLfloat s_pred = 15;
+GLfloat pred = 0;
+GLfloat PI = M_PI;
+GLfloat center[3]{50, 0, 25};
+
+std::vector<GLfloat> midPointLocation{ 0.0f,0.0f,0.0f };
+std::vector<GLfloat> midPointLocationScaled{ 0,0,0 };
+
 
 // Color Palette handle
 HPALETTE hPalette = NULL;
@@ -49,23 +103,23 @@ static HINSTANCE hInstance;
 static GLfloat xRot = 0.0f;
 static GLfloat yRot = 0.0f;
 static GLfloat zRot = 0.0f;
-static GLfloat rotSpeed = 20.0f;
+static GLfloat rotSpeed = 10.0f;
 
 static GLfloat zoom = 0.0f;
-static GLfloat fov = 1000.0f;
+static GLfloat fov = 3000.0f;
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
-static GLfloat cameraX = 50.0f;
+static GLfloat cameraX = 500.0f;
 static GLfloat cameraY = 50.0f;
 static GLfloat cameraZ = 200.0f;
-static GLfloat cameraSpeed = 50.0f;
+static GLfloat cameraSpeed = 20.0f;
 
 // Opis tekstury
 BITMAPINFOHEADER	bitmapInfoHeader;	// nagłówek obrazu
 unsigned char*		bitmapData;			// dane tekstury
 unsigned int		texture[2];			// obiekt tekstury
-
+unsigned int tekstury[2];
 
 // Declaration for Window procedure
 LRESULT CALLBACK WndProc(HWND    hWnd,
@@ -104,6 +158,31 @@ void ReduceToUnit(float vector[3])
 }
 
 
+unsigned int LoadTexture(const char* file, GLenum textureSlot)
+{
+	GLuint texHandle;
+	// Copy file to OpenGL
+	glGenTextures(textureSlot, &texHandle);
+	glBindTexture(GL_TEXTURE_2D, texHandle);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	int width, height, nrChannels;
+	const auto data = stbi_load(file, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, nrChannels, width , height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+	else
+	{
+		// nie udalo sie zaladowac pliku
+	}
+	stbi_image_free(data);
+	return texHandle;
+}
+
+
 // Points p1, p2, & p3 specified in counter clock-wise order
 void calcNormal(float v[3][3], float out[3])
 {
@@ -132,155 +211,6 @@ void calcNormal(float v[3][3], float out[3])
 }
 
 
-
-// Change viewing volume and viewport.  Called when window is resized
-void ChangeSize(GLsizei w, GLsizei h)
-{
-	GLfloat nRange = 1000.0f;
-	GLfloat fAspect;
-	// Prevent a divide by zero
-	if (h == 0)
-		h = 1;
-
-	lastWidth = w;
-	lastHeight = h;
-
-	fAspect = (GLfloat)w / (GLfloat)h;
-	// Set Viewport to window dimensions
-	glViewport(0, 0, w, h);
-
-	// Reset coordinate system
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	// Establish clipping volume (left, right, bottom, top, near, far)
-	if (w <= h)
-		glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
-	else
-		glOrtho(-nRange * w / h, nRange*w / h, -nRange, nRange, -nRange, nRange);
-
-	// Establish perspective: 
-	
-	//gluPerspective(60.0f,fAspect,1.0,400);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-
-
-// This function does any needed initialization on the rendering
-// context.  Here it sets up and initializes the lighting for
-// the scene.
-void SetupRC()
-{
-	// Light values and coordinates
-	//GLfloat  ambientLight[] = { 0.3f, 0.3f, 0.3f, 1.0f };
-	//GLfloat  diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	//GLfloat  specular[] = { 1.0f, 1.0f, 1.0f, 1.0f};
-	//GLfloat	 lightPos[] = { 0.0f, 150.0f, 150.0f, 1.0f };
-	//GLfloat  specref[] =  { 1.0f, 1.0f, 1.0f, 1.0f };
-
-
-	glEnable(GL_DEPTH_TEST);	// Hidden surface removal
-	glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
-	//glEnable(GL_CULL_FACE);		// Do not calculate inside of jet
-
-	// Enable lighting
-	//glEnable(GL_LIGHTING);
-
-	// Setup and enable light 0
-	//glLightfv(GL_LIGHT0,GL_AMBIENT,ambientLight);
-	//glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuseLight);
-	//glLightfv(GL_LIGHT0,GL_SPECULAR,specular);
-	//glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
-	//glEnable(GL_LIGHT0);
-
-	// Enable color tracking
-	//glEnable(GL_COLOR_MATERIAL);
-
-	// Set Material properties to follow glColor values
-	//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-
-	// All materials hereafter have full specular reflectivity
-	// with a high shine
-	//glMaterialfv(GL_FRONT, GL_SPECULAR,specref);
-	//glMateriali(GL_FRONT,GL_SHININESS,128);
-
-
-	// White background
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Black brush
-	glColor3f(0.0, 0.0, 0.0);
-}
-
-
-
-
-
-
-unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
-{
-	FILE *filePtr;							// wskaźnik pozycji pliku
-	BITMAPFILEHEADER	bitmapFileHeader;		// nagłówek pliku
-	unsigned char		*bitmapImage;			// dane obrazu
-	int					imageIdx = 0;		// licznik pikseli
-	unsigned char		tempRGB;				// zmienna zamiany składowych
-
-	// otwiera plik w trybie "read binary"
-	filePtr = fopen(filename, "rb");
-	if (filePtr == NULL)
-		return NULL;
-
-	// wczytuje nagłówek pliku
-	fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
-
-	// sprawdza, czy jest to plik formatu BMP
-	if (bitmapFileHeader.bfType != BITMAP_ID)
-	{
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// wczytuje nagłówek obrazu
-	fread(bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
-
-	// ustawia wskaźnik pozycji pliku na początku danych obrazu
-	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
-
-	// przydziela pamięć buforowi obrazu
-	bitmapImage = (unsigned char*)malloc(bitmapInfoHeader->biSizeImage);
-
-	// sprawdza, czy udało się przydzielić pamięć
-	if (!bitmapImage)
-	{
-		free(bitmapImage);
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// wczytuje dane obrazu
-	fread(bitmapImage, 1, bitmapInfoHeader->biSizeImage, filePtr);
-
-	// sprawdza, czy dane zostały wczytane
-	if (bitmapImage == NULL)
-	{
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// zamienia miejscami składowe R i B 
-	for (imageIdx = 0; imageIdx < bitmapInfoHeader->biSizeImage; imageIdx += 3)
-	{
-		tempRGB = bitmapImage[imageIdx];
-		bitmapImage[imageIdx] = bitmapImage[imageIdx + 2];
-		bitmapImage[imageIdx + 2] = tempRGB;
-	}
-
-	// zamyka plik i zwraca wskaźnik bufora zawierającego wczytany obraz
-	fclose(filePtr);
-	return bitmapImage;
-}
 
 void cegla(double x, double y, double z)
 {
@@ -375,496 +305,402 @@ void DrawGrid(int HALF_GRID_SIZE)
 }
 
 
-void kolaL(double r, double h)
+
+void axxxes() {
+
+	glBegin(GL_LINES);
+	glColor3f(0.2, 0.8, 0.1);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1000.0f, 0.0f);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.8, 0.2, 0.1);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(1000.0f, 0.0f, 0.0f);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.1, 0.2, 0.8);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1000.0f);
+	glEnd();
+}
+
+
+// Change viewing volume and viewport.  Called when window is resized
+void ChangeSize(GLsizei w, GLsizei h)
 {
-	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kol z jednej strony
-	{
-		double OX = 0 + i, OY = 0, OZ = 0;
-		double x, y, alpha, PI = 3.14;
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
+	GLfloat nRange = 100.0f;
+	GLfloat fAspect;
+	// Prevent a divide by zero
+	if (h == 0)
+		h = 1;
 
-		glBegin(GL_TRIANGLE_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
+	lastWidth = w;
+	lastHeight = h;
 
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
+	fAspect = (GLfloat)w / (GLfloat)h;
+	// Set Viewport to window dimensions
+	glViewport(0, 0, w, h);
 
+	// Reset coordinate system
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 
-		//druga para kol
+	// Establish clipping volume (left, right, bottom, top, near, far)
+	/*
+	if (w <= h)
+		glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
+	else
+		glOrtho(-nRange * w / h, nRange*w / h, -nRange, nRange, -nRange, nRange);
+	*/
+	// Establish perspective: 
 
-		OZ = 60; //OZ przesuwa prawe kola 
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-	}
+	gluPerspective(60.0f, fAspect, 1.0, fov);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 
 }
 
-void kolpaki(double r, double h)
+
+
+// This function does any needed initialization on the rendering
+// context.  Here it sets up and initializes the lighting for
+// the scene.
+void SetupRC()
 {
-	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc kolpaków z jednej strony
-	{
-		double OX = 0 + i, OY = 0, OZ = -2;	//-2 zeby wystawaly z kol
-		double x, y, alpha, PI = 3.14;
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.8, 0.8);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
+	// Light values and coordinates
+	//GLfloat  ambientLight[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+	//GLfloat  diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	//GLfloat  specular[] = { 1.0f, 1.0f, 1.0f, 1.0f};
+	//GLfloat	 lightPos[] = { 0.0f, 150.0f, 150.0f, 1.0f };
+	//GLfloat  specref[] =  { 1.0f, 1.0f, 1.0f, 1.0f };
 
 
-		//druga para kol
+	glEnable(GL_DEPTH_TEST);	// Hidden surface removal
+	glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
+	TwInit(TW_OPENGL, NULL);
 
-		OZ = 60 + 7; //OZ przesuwa prawe kolpaki (65 - zerowa wartosc wychodzenia z kola xD) czyli 65+2=67 zeby bylo sy,etrycznie do 1 prary kolpakow
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
+	//glEnable(GL_CULL_FACE);		// Do not calculate inside of jet
 
-		glBegin(GL_QUAD_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
+	// Enable lighting
+	//glEnable(GL_LIGHTING);
 
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-	}
+	// Setup and enable light 0
+	//glLightfv(GL_LIGHT0,GL_AMBIENT,ambientLight);
+	//glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuseLight);
+	//glLightfv(GL_LIGHT0,GL_SPECULAR,specular);
+	//glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
+	//glEnable(GL_LIGHT0);
+
+	// Enable color tracking
+	//glEnable(GL_COLOR_MATERIAL);
+
+	// Set Material properties to follow glColor values
+	//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+	// All materials hereafter have full specular reflectivity
+	// with a high shine
+	//glMaterialfv(GL_FRONT, GL_SPECULAR,specref);
+	//glMateriali(GL_FRONT,GL_SHININESS,128);
 
 
+	// White background
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	// Black brush
+	glColor3f(0.0, 0.0, 0.0);
+
+
+
+	//t = clock();
+	
+
+
+
+	TwInit(TW_OPENGL, NULL);
+	TwBar *bar;
+	bar = TwNewBar("Collect all points");
+
+	TwAddVarRW(bar, "Angle", TW_TYPE_FLOAT, &axMoveDeg, "precision=1");
+	TwAddVarRW(bar, "x position", TW_TYPE_FLOAT, &posX, "precision=1");
+	TwAddVarRW(bar, "y position", TW_TYPE_FLOAT, &posZ, "precision=1");
+	TwAddVarRW(bar, "velocityL", TW_TYPE_FLOAT, &velocityL, "precision=1");
+	TwAddVarRW(bar, "velocityR", TW_TYPE_FLOAT, &velocityR, "precision=1");
+	TwAddVarRW(bar, "velocity", TW_TYPE_FLOAT, &velocity, "precision=1");
+
+
+	TwAddVarRW(bar, "Best Time ", TW_TYPE_FLOAT, &secondsPassed, " group=Winners precision=1");
+
+	TwAddVarRW(bar, "Your Time", TW_TYPE_FLOAT, &secondsPassed, " group=Time precision=1");
+
+	TwAddVarRW(bar, "1", TW_TYPE_BOOLCPP, &points[0], "group=Points");
+	TwAddVarRW(bar, "2", TW_TYPE_BOOLCPP, &points[1], "group=Points");
+	TwAddVarRW(bar, "3", TW_TYPE_BOOLCPP, &points[2], "group=Points");
+	TwAddVarRW(bar, "4", TW_TYPE_BOOLCPP, &points[3], "group=Points");
+	TwAddVarRW(bar, "5", TW_TYPE_BOOLCPP, &points[4], "group=Points");
+
+	/*TwAddVarRW(bar, "1", TW_TYPE_FLOAT, &jeepPoints[0], "precision=1");
+	TwAddVarRW(bar, "2", TW_TYPE_FLOAT, &jeepPoints[1], "precision=1");
+	TwAddVarRW(bar, "3", TW_TYPE_FLOAT, &jeepPoints[2], "precision=1");
+	TwAddVarRW(bar, "4", TW_TYPE_FLOAT, &jeepPoints[3], "precision=1");*/
+
+
+	
+
+
+
+	GLfloat refresh = 0.1;
+	TwSetParam(bar, NULL, "refresh", TW_PARAM_FLOAT, 1, &refresh);
+
+	int barSize[2] = { 224, 500 };
+	TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
+
+	
 }
 
-void lacznik(double r, double h)
+
+unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
 {
-	int i;
-	for (i = 0; i < 120; i += 30)		//	120/30=ilosc poloczen kol 
+	FILE *filePtr;							// wskaźnik pozycji pliku
+	BITMAPFILEHEADER	bitmapFileHeader;		// nagłówek pliku
+	unsigned char		*bitmapImage;			// dane obrazu
+	int					imageIdx = 0;		// licznik pikseli
+	unsigned char		tempRGB;				// zmienna zamiany składowych
+
+	// otwiera plik w trybie "read binary"
+	filePtr = fopen(filename, "rb");
+	if (filePtr == NULL)
+		return NULL;
+
+	// wczytuje nagłówek pliku
+	fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
+
+	// sprawdza, czy jest to plik formatu BMP
+	if (bitmapFileHeader.bfType != BITMAP_ID)
 	{
-		double OX = 0 + i, OY = 0, OZ = 5;	//OZ=5 do polowy kol
-		double x, y, alpha, PI = 3.14;
-		glBegin(GL_QUAD_STRIP);
-		for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
-
-		//mozna wywalic to co na dole ale wtedy zostanie sciana boczna
-
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.4, 0.4);
-		glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-		for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, 0 + OZ);
-		}
-		glEnd();
-
-
-
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(0 + OX, 0 + OY, h + OZ);
-		for (alpha = 0; alpha >= -2 * PI; alpha -= PI / 8.0)
-		{
-			x = r * sin(alpha);
-			y = r * cos(alpha);
-			glVertex3d(x + OX, y + OY, h + OZ);
-		}
-		glEnd();
+		fclose(filePtr);
+		return NULL;
 	}
-}
 
-void blotnikPrzod(double r1, double r2, double h, double d)
-{
-	double PI = 3.14, alpha, x, y;
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3d(0.1, 0.0, 0);	//czarny
-	glVertex3d(0, 0, 0);
-	for (alpha = PI; alpha <= 2 * PI; alpha += PI / 8.0)
+	// wczytuje nagłówek obrazu
+	fread(bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
+
+	// ustawia wskaźnik pozycji pliku na początku danych obrazu
+	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
+
+	// przydziela pamięć buforowi obrazu
+	bitmapImage = (unsigned char*)malloc(bitmapInfoHeader->biSizeImage);
+
+	// sprawdza, czy udało się przydzielić pamięć
+	if (!bitmapImage)
 	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, 0);
+		free(bitmapImage);
+		fclose(filePtr);
+		return NULL;
 	}
-	glEnd();
 
-	glBegin(GL_QUAD_STRIP);
-	for (alpha = 0; alpha >= -PI; alpha -= PI / 8.0)
+	// wczytuje dane obrazu
+	fread(bitmapImage, 1, bitmapInfoHeader->biSizeImage, filePtr);
+
+	// sprawdza, czy dane zostały wczytane
+	if (bitmapImage == NULL)
 	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, h);
-		glVertex3d(x, y, 0);
+		fclose(filePtr);
+		return NULL;
 	}
-	glEnd();
 
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex3d(0, 0, h);
-	for (alpha = 0; alpha >= -PI; alpha -= PI / 8.0)
+	// zamienia miejscami składowe R i B 
+	for (imageIdx = 0; imageIdx < bitmapInfoHeader->biSizeImage; imageIdx += 3)
 	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, h);
+		tempRGB = bitmapImage[imageIdx];
+		bitmapImage[imageIdx] = bitmapImage[imageIdx + 2];
+		bitmapImage[imageIdx + 2] = tempRGB;
 	}
-	glEnd();
 
+	// zamyka plik i zwraca wskaźnik bufora zawierającego wczytany obraz
+	fclose(filePtr);
+	return bitmapImage;
 }
 
 
-void scian(float x, float y, float z, float platform_X, float platform_Y, float platform_Z) {
+void kolizja(double x, double y, double z, double s) {
 
+	int size = s;
+	glBegin(GL_POLYGON);
 
-	GLfloat p_x[3] = { x, y, z };
-	GLfloat p_xx[3] = { x + platform_X, y, z };
-	GLfloat p_xz[3] = { x, y, z + platform_Z };
-	GLfloat p_xxz[3] = { x + platform_X, y, z + platform_Z };
-
-	GLfloat g_x[3] = { x , y + platform_Y, z };
-	GLfloat g_xx[3] = { x + platform_X, y + platform_Y, z };
-	GLfloat g_xz[3] = { x, y + platform_Y, z + platform_Z };
-	GLfloat g_xxz[3] = { x + platform_X, y + platform_Y, z + platform_Z };
-
-	glBegin(GL_TRIANGLE_STRIP);		//podstawa
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
+	glVertex3f(x, z, y);       // P1
+	glVertex3f(x, z, y + size);       // P2
+	glVertex3f(x + size, z, y + size);       // P3
+	glVertex3f(x + size, z, y);       // P4
 	glEnd();
 
-	glBegin(GL_TRIANGLE_STRIP);		//góra
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//przód
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_x);
-	glVertex3fv(p_xx);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xx);
-	glEnd();
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//tył
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
 }
-
-void maska(float x, float y, float z, float platform_X, float platform_Y, float platform_Z) {
-
-	float zzz = platform_Z / 5;
-
-	GLfloat p_x[3] = { x, y, z };
-	GLfloat p_xx[3] = { x + platform_X, y, z };
-	GLfloat p_xz[3] = { x, y, z + platform_Z };
-	GLfloat p_xxz[3] = { x + platform_X, y, z + platform_Z };
-
-	GLfloat g_x[3] = { x + platform_X / 2 , y + platform_Y, z + zzz };
-	GLfloat g_xx[3] = { x + platform_X, y + platform_Y, z + zzz };
-	GLfloat g_xz[3] = { x + platform_X / 2, y + platform_Y, z + platform_Z - zzz };
-	GLfloat g_xxz[3] = { x + platform_X, y + platform_Y, z + platform_Z - zzz };
-
-	glBegin(GL_TRIANGLE_STRIP);		//podstawa
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//góra
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//przód
-	glVertex3fv(p_x);
-	glVertex3fv(p_xz);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_x);
-	glVertex3fv(p_xx);
-	glVertex3fv(g_x);
-	glVertex3fv(g_xx);
-	glEnd();
-	glBegin(GL_TRIANGLE_STRIP);		//boki
-	glVertex3fv(p_xz);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xz);
-	glVertex3fv(g_xxz);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);		//tył
-	glVertex3fv(p_xx);
-	glVertex3fv(p_xxz);
-	glVertex3fv(g_xx);
-	glVertex3fv(g_xxz);
-	glEnd();
-}
-
-void nadwozie(float x, float y, float z) {
-
-	float nadwozieX = 100, nadwozieY = 5, nadwozieZ = 50;
-	float maskaX = 60, maskaY = 35, maskaZ = 50;
-	float pakaX = nadwozieX - maskaX, pakaY = 8, pakaZ = 2;
-	float oddalenie_scian = 3;
-
-
-	maska(x, y + nadwozieY, z, maskaX, maskaY, maskaZ);
-	scian(x, y, z, nadwozieX, nadwozieY, nadwozieZ);
-	scian(x + maskaX, y + nadwozieY, z + oddalenie_scian, pakaX, pakaY, pakaZ);
-	scian(x + maskaX, y + nadwozieY, z + nadwozieZ - oddalenie_scian - pakaZ, pakaX, pakaY, pakaZ);
-
-	scian(x + nadwozieX - pakaZ, y + nadwozieY, z + oddalenie_scian + pakaZ,
-		pakaZ, pakaY, nadwozieZ - 2 * (oddalenie_scian + pakaZ));
-}
-
-
-void antena(double r, double h, double OX, double OY, double OZ)
-{
-
-	double x, z, alpha, PI = 3.14;
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3d(0.8, 0.0, 0);
-	glVertex3d(0 + OX, 0 + OY, 0 + OZ);
-	for (alpha = 0; alpha <= 2 * PI; alpha += PI / 8.0)
-	{
-		x = r * sin(alpha);
-		z = r * cos(alpha);
-		glVertex3d(x + OX, 0 + OY, z + OZ);
-
-	}
-	glEnd();
-
-	glBegin(GL_TRIANGLE_STRIP);
-	for (alpha = 0.0; alpha <= 2 * PI; alpha += PI / 8.0)
-	{
-		x = r * sin(alpha);
-		z = r * cos(alpha);
-		glVertex3d(x + OX, 0 + OY, z + OZ);
-		glVertex3d(OX, OY + h, OZ);
-	}
-	glEnd();
-}
-
-
-void ladowanie(void)
-{
-	objl::Loader floor;
-	glPushMatrix();
-
-	glRotatef(0, 0, 0, 0);
-	glScalef(200, 200, 200);
-
-	float x_position = 0;
-	float y_position = -0.05;
-	float z_position = 0;
-
-	if (floor.LoadFile("objects/terrain3.obj"))
-	{
-		for (int i = 0; i < floor.LoadedMeshes.size(); i++)
-		{
-			objl::Mesh curMesh = floor.LoadedMeshes[i];
-
-			for (int j = 0; j < curMesh.Indices.size(); j += 3)
-			{
-				glBegin(GL_TRIANGLES);
-				glColor3f(1, 0, 0);
-				if (i == 0) glColor3f(1, 0, 0);
-				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j]].Position.X + x_position,
-					curMesh.Vertices[curMesh.Indices[j]].Position.Y + y_position,
-					curMesh.Vertices[curMesh.Indices[j]].Position.Z + z_position
-				);
-
-				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.X + x_position,
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Y + y_position,
-					curMesh.Vertices[curMesh.Indices[j + 1]].Position.Z + z_position
-				);
-
-				glVertex3f(
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.X + x_position,
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Y + y_position,
-					curMesh.Vertices[curMesh.Indices[j + 2]].Position.Z + z_position
-				);
-				glEnd();
-			}
-		}
-	}
-}
-//CAMERA
-
-
 // Called to draw scene
 void RenderScene(void)
-{
-	//float normal[3];	// Storeage for calculated surface normal
-
-	// Clear the window with current clearing color
+{		
+	bool stop = true;
+	for (auto a : points) 
+		if (!a) stop = false;
+	
+	if (!stop) {
+		testTime = clock();
+		timePassed = testTime - startTime;
+		secondsPassed = timePassed / (double)CLOCKS_PER_SEC;
+	}
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Save the matrix state and do the rotations
+	//if (posX >= 150 && posX <= 350 && posZ >=-50 && posZ >= 150)
+	//	pred = -pred;
+	
+
+	
 	glPushMatrix();
-	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-	glRotatef(yRot, 0.0f, 1.0f, 0.0f);
-	glRotatef(zRot, 0.0f, 0.0f, 1.0f);
+		
+		velocity = (velocityL + velocityR) / 2;
+		velocityUpdate = 0;
 
-	/////////////////////////////////////////////////////////////////
-	// MIEJSCE NA KOD OPENGL DO TWORZENIA WLASNYCH SCEN:		   //
-	/////////////////////////////////////////////////////////////////
+		if (velocityL != velocityR)
+		{	
+			
+			if (swingRad = 60*(velocityL + velocityR) / (2 * (velocityL - velocityR)))
+				axMove += atan2(swingRad, 0) - atan2(swingRad, velocity);
 
-	//Sposób na odróźnienie "przedniej" i "tylniej" ściany wielokąta:
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
 
-	gluLookAt(cameraX, cameraY, cameraZ, 0 + cameraX, 0 + cameraY, 0.0, 0.0, 1.0, 0.0);
+		posX += velocity * sin(axMove);
+		posZ += velocity * cos(axMove);
+
 	
-	glRotatef(zoom, 0, 0, 0);
+		gluLookAt(posX, posY + 180, posZ - 300, posX, posY, posZ, 0.0, 1.0, 0.0);
+		//gluLookAt(posX, posY + 250, posZ -1, posX, posY, posZ, 0.0, 1.0, 0.0);
+
+
+		kolizja(200, 0, 0, 100);
+
+		kolizja(100, 300, -10, 50);
+		kolizja(400, 50, -10, 50);
+		kolizja(-200, 0, -10, 50);
+		kolizja(600, -50, -10, 50);
+		kolizja(-100, -400, -10, 50);
+		axxxes();
+
+		//200, 0
+		//300, 100
+		for (int i = 0; i < 4; i++) {
+
+			jeepPoints[i] = jeepPointsStatic[i];
+		}
+
+		jeepPoints[0] = posX + jeepPointsStatic[0];
+		jeepPoints[1] = posZ + jeepPointsStatic[1];
+		jeepPoints[2] = posX + jeepPointsStatic[2];
+		jeepPoints[3] = posZ + jeepPointsStatic[3];
+
+			collision = !(jeepPoints[0] < 200 || jeepPoints[1] < 0 || jeepPoints[2] > 300 || jeepPoints[3] > 100);
+			
+
+			if (!points[0])	points[0] = !(jeepPoints[0] < 100 || jeepPoints[1] < 300 || jeepPoints[2] > 150 || jeepPoints[3] > 350);
+			if (!points[1]) points[1] = !(jeepPoints[0] < 400 || jeepPoints[1] < 50 || jeepPoints[2] > 450 || jeepPoints[3] > 100);
+			if (!points[2]) points[2] = !(jeepPoints[0] < -200 || jeepPoints[1] < 0 || jeepPoints[2] > -150 || jeepPoints[3] > 50);
+			if (!points[3])	points[3] = !(jeepPoints[0] < 600 || jeepPoints[1] < -50 || jeepPoints[2] > 650 || jeepPoints[3] > 0);
+			if (!points[4])	points[4] = !(jeepPoints[0] < -100 || jeepPoints[1] < -400 || jeepPoints[2] > -5 || jeepPoints[3] > -350);
 
 
 
-	//cegla(30, 40, 30);
-	//DrawGrid(500);			//mozna wywalic
-	kolaL(10, 10);	//promien,szerokosc kół
-	kolpaki(5, 5);
-	lacznik(2, 60);
-	//blotnikPrzod(10.0, 10.0, 50.0, 0.0);	//wielkosc 1,wielkosc 2.,szerokosc,jak wysoko ma byc polozone(OY)
+		glPushMatrix();
+			glScalef(10, 5, 10);
 
-	//maska(0.0f, 10.0f, 10.0f,50,20,50);	//polozenie: OY i OZ=10 bo 10 mają koła, 3 ost. param to wielkosc maski w XYZ
-	nadwozie(0, 0, 10);
+			glTranslatef(0, 0, 100);
 
-	antena(2, 50, 90, 5, 20);
-	antena(2, 50, 90, 5, 50);
-	
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+			Terrain powierzchnia("objects/mars.obj",0,-0.1,0);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, tekstury[0]);
+			powierzchnia.draw();
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+
+			glTranslatef(0, 0, -100);
+
+		glPopMatrix();
 
 
-	ladowanie();
-	glPopMatrix();
-	/////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////
+		/*glPushMatrix();
+			Terrain objekty("objects/rock/rock.obj", 50, -100, 4);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, tekstury[1]);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			objekty.draw();
+		glPopMatrix();*/
+
+		glPushMatrix();
+
+			glTranslatef(posX , posY, posZ);
+			
+					if (velocityL > 0)
+					{
+						if (velocityL - momentumConst > 0)
+							velocityL -= momentumConst;
+						else velocityL = 0;
+					}
+					else
+					{
+						if (velocityL + momentumConst < 0)
+							velocityL += momentumConst;
+						else velocityL = 0;
+					}
+
+
+					if (velocityR > 0)
+					{
+						if (velocityR - momentumConst > 0)
+							velocityR -= momentumConst;
+						else velocityR = 0;
+					}
+					else
+					{
+						if (velocityR + momentumConst < 0)
+							velocityR += momentumConst;
+						else velocityR = 0;
+					}
+
+					midPointLocationScaled = { midPointLocation[0] ,midPointLocation[2]  ,midPointLocation[1] };
+
+					glTranslatef(midPointLocationScaled[0], midPointLocationScaled[2], midPointLocationScaled[1]);
+					glRotatef(axMove * 180 / GL_PI, 0.0f, 1.0f, 0.0f); 
+					glTranslatef(-midPointLocationScaled[0], -midPointLocationScaled[2], -midPointLocationScaled[1]); 
+					glRotatef(90, 0, 1, 0);
+					//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+			jeep lazik(0, 0, 0);
+			lazik.draw();
+			
+		
+		glPopMatrix();
+
+		axMoveDeg = fmod(axMove * 180 / GL_PI, 360);
+
+		if (!colliding && collision)
+		{
+			velocityL = -0.6*velocityL;
+			velocityR = -0.6*velocityR;
+			velocity = -0.6*velocity;
+			colliding = 1;
+			collisionTimer = 5;
+		}
+
+		if (collisionTimer)
+			collisionTimer--;
+		else
+			colliding = 0;
+
+	TwDraw();
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
-
-	// Flush drawing commands
 	glFlush();
 }
 
@@ -1071,12 +907,15 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
 		SetupRC();
-		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
+		//glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
-		// ³aduje pierwszy obraz tekstury:
+		tekstury[0]=LoadTexture("objects/mars.png", 1);
+		tekstury[1] = LoadTexture("objects/rock.png", 1);
+
+		// ładuje pierwszy obraz tekstury:
 		//bitmapData = LoadBitmapFile("Bitmapy\\checker.bmp", &bitmapInfoHeader);
 
-		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
+	/*	glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1087,11 +926,11 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		// tworzy obraz tekstury
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
 			bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
-
+		
 		if (bitmapData)
 			free(bitmapData);
 
-		// ³aduje drugi obraz tekstury:
+		// ładuje drugi obraz tekstury:
 		//	bitmapData = LoadBitmapFile("Bitmapy\\crate.bmp", &bitmapInfoHeader);
 		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
@@ -1107,8 +946,8 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 
 		if (bitmapData)
 			free(bitmapData);
-
-		// ustalenie sposobu mieszania tekstury z t³em
+			*/
+		// ustalenie sposobu mieszania tekstury z tłem
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		break;
 
@@ -1145,7 +984,8 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		SwapBuffers(hDC);
 
 		// Validate the newly painted client area
-		ValidateRect(hWnd, NULL);
+		InvalidateRect(hWnd, NULL, FALSE); // loop
+
 	}
 	break;
 
@@ -1197,51 +1037,62 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 	case WM_KEYDOWN:
 	{
 		if (wParam == VK_UP)
-			xRot -= rotSpeed;
+		{
+			velocityL += const_velocity;
+			velocityR += const_velocity;
+			velocityUpdate = 1;
+		}
 
 		if (wParam == VK_DOWN)
-			xRot += rotSpeed;
-
-		if (wParam == VK_LEFT)
-			yRot -= rotSpeed;
-
-		if (wParam == VK_RIGHT)
-			yRot += rotSpeed;
-
-		if (wParam == VK_PRIOR)
-			zRot -= rotSpeed;
-
-		if (wParam == VK_NEXT)
-			zRot += rotSpeed;
-
-		if (wParam == 'W')
-			cameraY += cameraSpeed;
-
-		if (wParam == 'S')
-			cameraY -= cameraSpeed;
-
-		if (wParam == 'A')
-			cameraX -= cameraSpeed;
-
-		if (wParam == 'D')
-			cameraX += cameraSpeed;
-
-		if (wParam == 'Q')
-			cameraZ -= cameraSpeed;
-
-		if (wParam == 'E')
-			cameraZ += cameraSpeed;
-
-		if (wParam == VK_SUBTRACT)
-			zoom += rotSpeed;
-
-		if (wParam == VK_ADD)
-			zoom -= rotSpeed;
+		{
+			velocityL -= const_velocity;
+			velocityR -= const_velocity;
+			velocityUpdate = 1;
+		}
 
 
-		xRot = (const int)xRot % 360;
-		yRot = (const int)yRot % 360;
-		zRot = (const int)zRot % 360;
+		if (wParam == VK_LEFT) {
+			velocityL += const_velocity;
+			velocityR -= const_velocity;
+			velocityUpdate = 1;
+		}
+
+		if (wParam == VK_RIGHT) 
+		{
+			velocityR += const_velocity;
+			velocityL -= const_velocity;
+			velocityUpdate = 1;
+		}
+
+		if (wParam == VK_CONTROL)
+		{
+			posY -= const_velocity;
+			velocityUpdate = 1;
+		}
+		if (wParam == VK_SHIFT)
+		{
+			posY += const_velocity;
+			velocityUpdate = 1;
+		}
+		if (wParam == VK_SPACE)
+		{
+			velocityR = velocityL = 0;
+			velocityUpdate = 1;
+			posX = 0;
+			posZ = 0;
+			posY = 0;
+			axMove = 0;
+			for (int i = 0; i < 5; i++)
+				points[i] = false;
+			startTime = clock();
+		}
+		/*int xd = 10;
+		if (velocityL > xd)	velocityL = xd;
+		if (velocityL < -xd)	velocityL = -xd;
+		if (velocityR > xd)	velocityR = xd;
+		if (velocityR < -xd)	velocityR = -xd;*/
+
+
 
 		InvalidateRect(hWnd, NULL, FALSE);
 	}
@@ -1257,13 +1108,6 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 			DestroyWindow(hWnd);
 			break;
 
-			// Display the about box
-			/*case ID_HELP_ABOUT:
-				DialogBox (hInstance,
-					MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
-					hWnd,
-					AboutDlgProc);
-				break;*/
 		}
 	}
 	break;
@@ -1273,9 +1117,12 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		return (DefWindowProc(hWnd, message, wParam, lParam));
 
 	}
+	if (TwEventWin(hWnd, message, wParam, lParam)) // send event message to AntTweakBar
+		return 0;
 
 	return (0L);
 }
+
 
 
 
@@ -1291,18 +1138,6 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 		int i;
 		GLenum glError;
 
-		// glGetString demo
-	/*	SetDlgItemText(hDlg,IDC_OPENGL_VENDOR,glGetString(GL_VENDOR));
-		SetDlgItemText(hDlg,IDC_OPENGL_RENDERER,glGetString(GL_RENDERER));
-		SetDlgItemText(hDlg,IDC_OPENGL_VERSION,glGetString(GL_VERSION));
-		SetDlgItemText(hDlg,IDC_OPENGL_EXTENSIONS,glGetString(GL_EXTENSIONS));
-
-		// gluGetString demo
-		SetDlgItemText(hDlg,IDC_GLU_VERSION,gluGetString(GLU_VERSION));
-		SetDlgItemText(hDlg,IDC_GLU_EXTENSIONS,gluGetString(GLU_EXTENSIONS));
-		*/
-
-		// Display any recent error messages
 		i = 0;
 		do {
 			glError = glGetError();
@@ -1326,6 +1161,8 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 
 	// Closed from sysbox
 	case WM_CLOSE:
+		TwTerminate();
+
 		EndDialog(hDlg, TRUE);
 		break;
 	}
